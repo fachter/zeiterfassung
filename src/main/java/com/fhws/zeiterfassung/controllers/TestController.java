@@ -12,6 +12,7 @@ public class TestController {
 
     @GetMapping("/testApiCall")
     public ResponseEntity<String> testApiCall() {
-        return new ResponseEntity<>("Hello from the backend", HttpStatus.OK);
+        String someString = "Hello from the backend";
+        return new ResponseEntity<>(someString, HttpStatus.OK);
     }
 }

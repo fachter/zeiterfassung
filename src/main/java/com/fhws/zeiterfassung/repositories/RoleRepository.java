@@ -1,6 +1,7 @@
 package com.fhws.zeiterfassung.repositories;
 
 import com.fhws.zeiterfassung.entities.Role;
+import com.fhws.zeiterfassung.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
