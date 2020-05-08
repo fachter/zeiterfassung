@@ -8,7 +8,7 @@ services:
   database:
     image: mysql:5.7
     ports:
-      - 3307:3306
+      - 3309:3306
     environment:
       MYSQL_DATABASE: test_db
       MYSQL_USER: test_user
@@ -18,30 +18,30 @@ services:
       - db_data:/var/lib/mysql
       - .docker/database/db-dump:/docker-entrypoint-initdb.d
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - database
-    links:
-      - database:db
-    ports:
-      - 8085:80
-    environment:
-      PMA_HOST: db
-
-  web:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    depends_on:
-      - database
-    links:
-      - database:db
-    ports:
-      - 8089:8080
-    environment:
-      MYSQL_HOST: db
-      MYSQL_DATABASE: test_db
-      MYSQL_USER: test_user
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: test
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    depends_on:
+#      - database
+#    links:
+#      - database:database
+#    ports:
+#      - 4089:80
+#    environment:
+#      PMA_HOST: database
+#
+#  web:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - database
+#    links:
+#      - database:database
+#    ports:
+#      - 8089:8089
+#    environment:
+#      MYSQL_HOST: database
+#      MYSQL_DATABASE: test_db
+#      MYSQL_USER: test_user
+#      MYSQL_PASSWORD: test
+#      MYSQL_ROOT_PASSWORD: test
