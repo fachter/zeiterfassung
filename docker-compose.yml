@@ -1,11 +1,11 @@
 version: '3.7'
 
 volumes:
-  db_data:
+  db_data_zeiterfassung:
 
 services:
 
-  database:
+  database_zeiterfassung:
     image: mysql:5.7
     ports:
       - 3309:3306
@@ -15,33 +15,33 @@ services:
       MYSQL_PASSWORD: test
       MYSQL_ROOT_PASSWORD: test
     volumes:
-      - db_data:/var/lib/mysql
-      - .docker/database/db-dump:/docker-entrypoint-initdb.d
+      - db_data_zeiterfassung:/var/lib/mysql
+      - .docker/database_zeiterfassung/db-dump:/docker-entrypoint-initdb.d
 
-#  phpmyadmin:
-#    image: phpmyadmin/phpmyadmin
-#    depends_on:
-#      - database
-#    links:
-#      - database:database
-#    ports:
-#      - 4089:80
-#    environment:
-#      PMA_HOST: database
-#
-#  web:
-#    build:
-#      context: ./
-#      dockerfile: Dockerfile
-#    depends_on:
-#      - database
-#    links:
-#      - database:database
-#    ports:
-#      - 8089:8089
-#    environment:
-#      MYSQL_HOST: database
-#      MYSQL_DATABASE: test_db
-#      MYSQL_USER: test_user
-#      MYSQL_PASSWORD: test
-#      MYSQL_ROOT_PASSWORD: test
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - database_zeiterfassung
+    links:
+      - database_zeiterfassung:database_zeiterfassung
+    ports:
+      - 4089:80
+    environment:
+      PMA_HOST: database_zeiterfassung
+
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - database_zeiterfassung
+    links:
+      - database_zeiterfassung:database_zeiterfassung
+    ports:
+      - 8089:8089
+    environment:
+      MYSQL_HOST: database_zeiterfassung
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
