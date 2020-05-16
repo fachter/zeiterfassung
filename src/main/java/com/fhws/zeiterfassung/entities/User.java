@@ -27,10 +27,12 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnore
     private String password;
 
-//    @NotBlank
-//    @Column(unique = true)
-//    @Email
-//    private String email;
+    @NotBlank
+    @Column(unique = true)
+    @Email
+    private String email;
+
+    private String fullName;
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -97,6 +99,22 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Set<Role> getRoles() {
