@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
+import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
 import com.fhws.zeiterfassung.gateways.UserGateway;
@@ -63,16 +64,18 @@ class CreateNewUserUseCaseTest {
 
     @Test
     public void givenUsernameAlreadyExists_throwException() throws Exception {
-        doThrow(new UserAlreadyExistsException()).when(userGatewayMock).addUser(any(User.class));
+        when(userGatewayMock.getUserByUsername("existingUser")).thenReturn(new User());
         RegisterRequest registerRequest = new RegisterRequest()
                 .setUsername("existingUser")
                 .setPassword("test")
                 .setEmail("mail");
+
         Assertions.assertThrows(UserAlreadyExistsException.class, () -> createNewUser.create(registerRequest));
     }
 
     @Test
     public void givenAllFieldsAreSet() throws Exception {
+        when(userGatewayMock.getUserByUsername("newUser")).thenThrow(EntityNotFoundException.class);
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         RegisterRequest registerRequest = new RegisterRequest()
                 .setUsername("newUser")
@@ -93,6 +96,7 @@ class CreateNewUserUseCaseTest {
 
     @Test
     public void givenNoFullName_thenUseUsername() throws Exception {
+        when(userGatewayMock.getUserByUsername("newUser")).thenThrow(EntityNotFoundException.class);
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         RegisterRequest registerRequest = new RegisterRequest()
                 .setUsername("newUser")

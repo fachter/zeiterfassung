@@ -44,13 +44,13 @@ public class TestController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> createNewUser(@RequestBody RegisterRequest registerRequest) throws Exception {
+    public ResponseEntity<?> createNewUser(@RequestBody RegisterRequest registerRequest) {
         try {
             createNewUser.create(registerRequest);
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
         } catch (InvalidDataException e) {
-            return new ResponseEntity<>("Invalid data", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Invalid data", HttpStatus.valueOf(406));
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

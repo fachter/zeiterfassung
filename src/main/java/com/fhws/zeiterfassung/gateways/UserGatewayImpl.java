@@ -2,7 +2,7 @@ package com.fhws.zeiterfassung.gateways;
 
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
-import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
+import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +26,11 @@ public class UserGatewayImpl implements UserGateway {
     }
 
     @Override
-    public void addUser(User user) throws UserAlreadyExistsException {
+    public void addUser(User user) throws InvalidDataException {
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            throw new UserAlreadyExistsException();
+            throw new InvalidDataException();
         }
     }
 }

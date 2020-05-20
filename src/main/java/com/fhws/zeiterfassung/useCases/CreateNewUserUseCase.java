@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
+import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
 import com.fhws.zeiterfassung.gateways.UserGateway;
@@ -23,7 +24,12 @@ public class CreateNewUserUseCase implements CreateNewUser {
     public void create(RegisterRequest registerRequest) throws UserAlreadyExistsException, InvalidDataException {
         if (hasInvalidData(registerRequest))
             throw new InvalidDataException();
-        userGateway.addUser(getUserFromRegisterRequest(registerRequest));
+        try {
+            userGateway.getUserByUsername(registerRequest.getUsername());
+            throw new UserAlreadyExistsException();
+        } catch (EntityNotFoundException e) {
+            userGateway.addUser(getUserFromRegisterRequest(registerRequest));
+        }
     }
 
     private boolean hasInvalidData(RegisterRequest registerRequest) {
