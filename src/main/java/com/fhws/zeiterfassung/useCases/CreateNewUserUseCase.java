@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
+import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
@@ -21,14 +22,21 @@ public class CreateNewUserUseCase implements CreateNewUser {
     }
 
     @Override
-    public void create(RegisterRequest registerRequest) throws UserAlreadyExistsException, InvalidDataException {
+    public void create(RegisterRequest registerRequest) throws UserAlreadyExistsException, InvalidDataException, EmailAlreadyExistsException {
         if (hasInvalidData(registerRequest))
             throw new InvalidDataException();
         try {
             userGateway.getUserByUsername(registerRequest.getUsername());
+            registerRequest.getUsernameErrors().add("Username already exists");
             throw new UserAlreadyExistsException();
         } catch (EntityNotFoundException e) {
-            userGateway.addUser(getUserFromRegisterRequest(registerRequest));
+            try {
+                userGateway.getUserByEmail(registerRequest.getEmail());
+                registerRequest.getEmailErrors().add("Email already exists");
+                throw new EmailAlreadyExistsException();
+            } catch (EntityNotFoundException entityNotFoundException) {
+                userGateway.addUser(getUserFromRegisterRequest(registerRequest));
+            }
         }
     }
 

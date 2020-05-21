@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.controllers;
 import com.fhws.zeiterfassung.boundaries.Authenticate;
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.boundaries.GetAccountInformation;
+import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
 import com.fhws.zeiterfassung.models.AccountInformationViewModel;
@@ -50,8 +51,8 @@ public class AuthenticationController {
             return new ResponseEntity<>(authenticate.authenticate(
                     new AuthenticationRequest(registerRequest.getUsername(), registerRequest.getPassword())),
                     HttpStatus.ACCEPTED);
-        } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
+        } catch (UserAlreadyExistsException | EmailAlreadyExistsException e) {
+            return new ResponseEntity<>(registerRequest, HttpStatus.BAD_REQUEST);
         } catch (InvalidDataException e) {
             return new ResponseEntity<>("Invalid data", HttpStatus.valueOf(406));
         } catch (Exception e) {

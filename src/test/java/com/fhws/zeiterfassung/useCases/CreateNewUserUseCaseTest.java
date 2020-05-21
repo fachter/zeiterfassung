@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
+import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
@@ -17,6 +18,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +32,10 @@ import static org.mockito.Mockito.*;
 class CreateNewUserUseCaseTest {
 
     private CreateNewUser createNewUser;
-    @Mock private UserGateway userGatewayMock;
+    @Mock
+    private UserGateway userGatewayMock;
+    private final String newUsername = "newUser";
+    private final String validEmail = "valid@email";
 
     @BeforeEach
     void setUp() {
@@ -37,7 +44,7 @@ class CreateNewUserUseCaseTest {
 
     @Test
     public void givenNoRegisterRequest_throwInvalidDataException() {
-        Assertions.assertThrows(InvalidDataException.class, () -> createNewUser.create(null));
+        assertThrows(InvalidDataException.class, () -> createNewUser.create(null));
     }
 
     @ParameterizedTest
@@ -48,7 +55,7 @@ class CreateNewUserUseCaseTest {
                 .setPassword(Objects.toString(pw, ""))
                 .setEmail(Objects.toString(mail, ""));
 
-        Assertions.assertThrows(InvalidDataException.class, () -> createNewUser.create(registerRequest));
+        assertThrows(InvalidDataException.class, () -> createNewUser.create(registerRequest));
     }
 
     @ParameterizedTest
@@ -59,7 +66,7 @@ class CreateNewUserUseCaseTest {
                 .setPassword(pw)
                 .setEmail(mail);
 
-        Assertions.assertThrows(InvalidDataException.class, () -> createNewUser.create(registerRequest));
+        assertThrows(InvalidDataException.class, () -> createNewUser.create(registerRequest));
     }
 
     @Test
@@ -69,23 +76,32 @@ class CreateNewUserUseCaseTest {
                 .setUsername("existingUser")
                 .setPassword("test")
                 .setEmail("mail");
+        ArrayList<String> expectedErrors = new ArrayList<>();
+        expectedErrors.add("Username already exists");
 
-        Assertions.assertThrows(UserAlreadyExistsException.class, () -> createNewUser.create(registerRequest));
+        boolean exceptionThrown = false;
+        try {
+            createNewUser.create(registerRequest);
+        } catch (UserAlreadyExistsException e) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+        assertThat(registerRequest.getUsernameErrors()).usingRecursiveFieldByFieldElementComparator().isEqualTo(expectedErrors);
     }
 
     @Test
     public void givenAllFieldsAreSet() throws Exception {
-        when(userGatewayMock.getUserByUsername("newUser")).thenThrow(EntityNotFoundException.class);
+        prepareMocksBothThrowEntityNotFoundException();
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         RegisterRequest registerRequest = new RegisterRequest()
-                .setUsername("newUser")
+                .setUsername(newUsername)
                 .setPassword("test")
-                .setEmail("email")
+                .setEmail(validEmail)
                 .setFullName("New User");
         User expectedUser = new User();
-        expectedUser.setUsername("newUser");
+        expectedUser.setUsername(newUsername);
         expectedUser.setPassword("test");
-        expectedUser.setEmail("email");
+        expectedUser.setEmail(validEmail);
         expectedUser.setFullName("New User");
 
         createNewUser.create(registerRequest);
@@ -96,21 +112,48 @@ class CreateNewUserUseCaseTest {
 
     @Test
     public void givenNoFullName_thenUseUsername() throws Exception {
-        when(userGatewayMock.getUserByUsername("newUser")).thenThrow(EntityNotFoundException.class);
+        prepareMocksBothThrowEntityNotFoundException();
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         RegisterRequest registerRequest = new RegisterRequest()
-                .setUsername("newUser")
+                .setUsername(newUsername)
                 .setPassword("test")
-                .setEmail("email");
+                .setEmail(validEmail);
         User expectedUser = new User();
-        expectedUser.setUsername("newUser");
+        expectedUser.setUsername(newUsername);
         expectedUser.setPassword("test");
-        expectedUser.setEmail("email");
-        expectedUser.setFullName("newUser");
+        expectedUser.setEmail(validEmail);
+        expectedUser.setFullName(newUsername);
 
         createNewUser.create(registerRequest);
 
         verify(userGatewayMock, times(1)).addUser(captor.capture());
         assertThat(captor.getValue()).usingRecursiveComparison().isEqualTo(expectedUser);
+    }
+
+    @Test
+    public void givenEmailExists_thenThrowException() throws Exception {
+        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(EntityNotFoundException.class);
+        when(userGatewayMock.getUserByEmail("invalid@email")).thenReturn(new User());
+        RegisterRequest registerRequest = new RegisterRequest()
+                .setUsername(newUsername)
+                .setEmail("invalid@email")
+                .setPassword("valid")
+                .setFullName("Valid");
+        ArrayList<String> expectedErrors = new ArrayList<>();
+        expectedErrors.add("Email already exists");
+
+        boolean exceptionThrown = false;
+        try {
+            createNewUser.create(registerRequest);
+        } catch (EmailAlreadyExistsException e) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+        assertThat(registerRequest.getEmailErrors()).usingRecursiveFieldByFieldElementComparator().isEqualTo(expectedErrors);
+    }
+
+    private void prepareMocksBothThrowEntityNotFoundException() throws EntityNotFoundException {
+        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(EntityNotFoundException.class);
+        when(userGatewayMock.getUserByEmail(validEmail)).thenThrow(EntityNotFoundException.class);
     }
 }

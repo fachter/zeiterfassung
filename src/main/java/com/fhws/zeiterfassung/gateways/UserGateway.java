@@ -8,5 +8,7 @@ public interface UserGateway {
 
     User getUserByUsername(String username) throws EntityNotFoundException;
 
+    User getUserByEmail(String email) throws EntityNotFoundException;
+
     void addUser(User user) throws InvalidDataException;
 }

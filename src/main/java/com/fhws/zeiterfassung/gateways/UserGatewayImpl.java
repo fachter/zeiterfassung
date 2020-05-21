@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserGatewayImpl implements UserGateway {
 
+    //TODO: test it
     private final UserRepository userRepository;
 
     @Autowired
@@ -20,6 +21,14 @@ public class UserGatewayImpl implements UserGateway {
     @Override
     public User getUserByUsername(String username) throws EntityNotFoundException {
         User user = userRepository.findUserByUsername(username);
+        if (user == null)
+            throw new EntityNotFoundException();
+        return user;
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws EntityNotFoundException {
+        User user = userRepository.findUserByEmail(email);
         if (user == null)
             throw new EntityNotFoundException();
         return user;
