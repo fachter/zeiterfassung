@@ -3,12 +3,18 @@ package com.fhws.zeiterfassung.models;
 public class AuthenticationResponse {
 
     private final String jwt;
+    private final AccountInformationViewModel accountInformationViewModel;
 
-    public AuthenticationResponse(String jwt) {
+    public AuthenticationResponse(String jwt, AccountInformationViewModel accountInformationViewModel) {
         this.jwt = jwt;
+        this.accountInformationViewModel = accountInformationViewModel;
     }
 
     public String getJwt() {
         return jwt;
+    }
+
+    public AccountInformationViewModel getAccountInformationViewModel() {
+        return accountInformationViewModel;
     }
 }
