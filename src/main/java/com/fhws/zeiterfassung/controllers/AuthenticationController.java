@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.controllers;
 
+import com.fhws.zeiterfassung.boundaries.Authenticate;
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.boundaries.GetAccountInformation;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
@@ -23,24 +24,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserRepositoryUserDetailsService userDetailsService;
-    private final JwtUtil jwtTokenUtil;
     private final CreateNewUser createNewUser;
-    private final GetAccountInformation getAccountInformation;
+    private final Authenticate authenticate;
+//    private final AuthenticationManager authenticationManager;
+//    private final UserRepositoryUserDetailsService userDetailsService;
+//    private final JwtUtil jwtTokenUtil;
+//    private final GetAccountInformation getAccountInformation;
 
-    @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager,
-                                    UserRepositoryUserDetailsService userDetailsService,
-                                    JwtUtil jwtTokenUtil,
-                                    CreateNewUser createNewUser,
-                                    GetAccountInformation getAccountInformation) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
+    public AuthenticationController(CreateNewUser createNewUser, Authenticate authenticate) {
         this.createNewUser = createNewUser;
-        this.getAccountInformation = getAccountInformation;
+        this.authenticate = authenticate;
     }
+
 
     //    @GetMapping("/testApiCall")
 //    public ResponseEntity<String> testApiCall() {
@@ -52,30 +47,25 @@ public class AuthenticationController {
     public ResponseEntity<?> createNewUser(@RequestBody RegisterRequest registerRequest) {
         try {
             createNewUser.create(registerRequest);
+            return new ResponseEntity<>(authenticate.authenticate(
+                    new AuthenticationRequest(registerRequest.getUsername(), registerRequest.getPassword())),
+                    HttpStatus.ACCEPTED);
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
         } catch (InvalidDataException e) {
             return new ResponseEntity<>("Invalid data", HttpStatus.valueOf(406));
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong with the login", HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-                            authenticationRequest.getPassword()));
-        } catch (BadCredentialsException e) {
+            return ResponseEntity.ok(authenticate.authenticate(authenticationRequest));
+        } catch (Exception e) {
             return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
-
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-        final AccountInformationViewModel accountInfo = getAccountInformation.getViewModelFromUserDetails(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt, accountInfo));
     }
 }
