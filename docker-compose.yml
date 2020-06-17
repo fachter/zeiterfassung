@@ -38,7 +38,7 @@ services:
     links:
       - database_zeiterfassung:database_zeiterfassung
     ports:
-      - 8089:8089
+      - 80:80
     environment:
       MYSQL_HOST: database_zeiterfassung
       MYSQL_DATABASE: test_db
