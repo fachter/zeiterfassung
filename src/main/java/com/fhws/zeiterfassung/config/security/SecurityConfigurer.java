@@ -36,6 +36,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+//        http.requiresChannel().anyRequest().requiresSecure();
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
