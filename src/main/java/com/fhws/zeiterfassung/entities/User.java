@@ -17,10 +17,12 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
+
     @NotBlank
     @Size(min = 2, max = 60)
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @NotNull
@@ -34,11 +36,11 @@ public class User extends BaseEntity implements UserDetails {
 
     private String fullName;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
@@ -46,6 +48,17 @@ public class User extends BaseEntity implements UserDetails {
     private boolean enabled = true;
 
     public User() {
+    }
+
+    public User(
+            String username,
+            String password,
+            String email
+    ) {
+        this();
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     @Override
