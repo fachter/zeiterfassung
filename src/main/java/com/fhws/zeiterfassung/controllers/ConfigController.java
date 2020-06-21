@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 @RestController
 public class ConfigController {
 
@@ -21,7 +23,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/add-kunde", method = RequestMethod.POST)
-    public ResponseEntity<?> addKunde(@RequestBody KundenViewModel[] kundenViewModels) {
+    public ResponseEntity<?> addKunde(@RequestBody ArrayList<KundenViewModel> kundenViewModels) {
         kundenAdd.add(kundenViewModels);
         return new ResponseEntity<>(HttpStatus.OK);
     }
