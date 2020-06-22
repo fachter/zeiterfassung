@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.services;
 
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
+import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class UserRepositoryUserDetailsService implements UserDetailsService {
 
         try {
             return userGateway.getUserByUsername(username);
-        } catch (EntityNotFoundException e) {
+        } catch (UserDoesNotExistException e) {
             throw new UsernameNotFoundException("User with the username '" + username + "' not found.");
         }
     }

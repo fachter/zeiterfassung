@@ -2,10 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
-import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
-import com.fhws.zeiterfassung.exceptions.InvalidDataException;
-import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
+import com.fhws.zeiterfassung.exceptions.*;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.models.RegisterRequest;
 import org.junit.jupiter.api.Assertions;
@@ -132,7 +129,7 @@ class CreateNewUserUseCaseTest {
 
     @Test
     public void givenEmailExists_thenThrowException() throws Exception {
-        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(EntityNotFoundException.class);
+        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(UserDoesNotExistException.class);
         when(userGatewayMock.getUserByEmail("invalid@email")).thenReturn(new User());
         RegisterRequest registerRequest = new RegisterRequest()
                 .setUsername(newUsername)
@@ -152,8 +149,8 @@ class CreateNewUserUseCaseTest {
         assertThat(registerRequest.getEmailErrors()).usingRecursiveFieldByFieldElementComparator().isEqualTo(expectedErrors);
     }
 
-    private void prepareMocksBothThrowEntityNotFoundException() throws EntityNotFoundException {
-        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(EntityNotFoundException.class);
-        when(userGatewayMock.getUserByEmail(validEmail)).thenThrow(EntityNotFoundException.class);
+    private void prepareMocksBothThrowEntityNotFoundException() throws UserDoesNotExistException {
+        when(userGatewayMock.getUserByUsername(newUsername)).thenThrow(UserDoesNotExistException.class);
+        when(userGatewayMock.getUserByEmail(validEmail)).thenThrow(UserDoesNotExistException.class);
     }
 }

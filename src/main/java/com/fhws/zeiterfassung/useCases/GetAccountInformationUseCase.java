@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.useCases;
 import com.fhws.zeiterfassung.boundaries.GetAccountInformation;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
+import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.models.AccountInformationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class GetAccountInformationUseCase implements GetAccountInformation {
         try {
             if (userDetails != null)
                 return getVmFromUser(userGateway.getUserByUsername(userDetails.getUsername()));
-        } catch (EntityNotFoundException ignored) {}
+        } catch (UserDoesNotExistException ignored) {}
         return new AccountInformationViewModel();
     }
 

@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.useCases;
 import com.fhws.zeiterfassung.boundaries.GetAccountInformation;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
+import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.models.AccountInformationViewModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ class GetAccountInformationUseCaseTest {
     @Test
     public void givenNoUserExistsForGivenUserDetails() throws Exception {
         when(userDetailsMock.getUsername()).thenReturn("invalidUsername");
-        when(userGatewayMock.getUserByUsername("invalidUsername")).thenThrow(EntityNotFoundException.class);
+        when(userGatewayMock.getUserByUsername("invalidUsername")).thenThrow(UserDoesNotExistException.class);
 
         AccountInformationViewModel viewModel = useCase.getViewModelFromUserDetails(userDetailsMock);
 

@@ -2,10 +2,7 @@ package com.fhws.zeiterfassung.useCases;
 
 import com.fhws.zeiterfassung.boundaries.CreateNewUser;
 import com.fhws.zeiterfassung.entities.User;
-import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
-import com.fhws.zeiterfassung.exceptions.InvalidDataException;
-import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
+import com.fhws.zeiterfassung.exceptions.*;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.models.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +26,12 @@ public class CreateNewUserUseCase implements CreateNewUser {
             userGateway.getUserByUsername(registerRequest.getUsername());
             registerRequest.getUsernameErrors().add("Username already exists");
             throw new UserAlreadyExistsException();
-        } catch (EntityNotFoundException e) {
+        } catch (UserDoesNotExistException e) {
             try {
                 userGateway.getUserByEmail(registerRequest.getEmail());
                 registerRequest.getEmailErrors().add("Email already exists");
                 throw new EmailAlreadyExistsException();
-            } catch (EntityNotFoundException entityNotFoundException) {
+            } catch (UserDoesNotExistException entityNotFoundException) {
                 userGateway.addUser(getUserFromRegisterRequest(registerRequest));
             }
         }
