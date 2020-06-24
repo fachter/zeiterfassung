@@ -67,7 +67,11 @@ public class ConfigController {
 
     public ResponseEntity<?> addProjekte(@RequestBody ArrayList<ProjektViewModel> projektViewModels,
                                          @RequestHeader String authorization) {
-        projekteAdd.add(projektViewModels, getUsernameFromToken(authorization));
+        try {
+            projekteAdd.add(projektViewModels, getUsernameFromToken(authorization));
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

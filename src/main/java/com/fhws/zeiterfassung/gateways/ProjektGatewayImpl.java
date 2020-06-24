@@ -3,9 +3,11 @@ package com.fhws.zeiterfassung.gateways;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.repositories.ProjektRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+@Service
 public class ProjektGatewayImpl implements ProjektGateway {
 
     private final ProjektRepository repository;
