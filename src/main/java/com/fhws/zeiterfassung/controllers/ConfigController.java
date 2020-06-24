@@ -81,6 +81,10 @@ public class ConfigController {
 
     @RequestMapping(value = "/projekte", method = RequestMethod.POST)
     public ResponseEntity<?> getProjekte(@RequestHeader String authorization) {
-        return new ResponseEntity<>(projekteGet.get(getUsernameFromToken(authorization)), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(projekteGet.get(getUsernameFromToken(authorization)), HttpStatus.OK);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("User does not exist!", HttpStatus.FORBIDDEN);
+        }
     }
 }
