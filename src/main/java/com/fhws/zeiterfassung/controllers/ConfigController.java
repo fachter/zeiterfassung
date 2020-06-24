@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.controllers;
 import com.fhws.zeiterfassung.boundaries.KundenAdd;
 import com.fhws.zeiterfassung.boundaries.KundenGet;
 import com.fhws.zeiterfassung.boundaries.ProjekteAdd;
+import com.fhws.zeiterfassung.boundaries.ProjekteGet;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.models.KundenViewModel;
@@ -21,16 +22,18 @@ public class ConfigController {
     private final KundenAdd kundenAdd;
     private final KundenGet kundenGet;
     private final ProjekteAdd projekteAdd;
+    private final ProjekteGet projekteGet;
     private final JwtUtil jwtUtil;
 
     @Autowired
     public ConfigController(KundenAdd kundenAdd,
                             KundenGet kundenGet,
                             ProjekteAdd projekteAdd,
-                            JwtUtil jwtUtil) {
+                            ProjekteGet projekteGet, JwtUtil jwtUtil) {
         this.kundenAdd = kundenAdd;
         this.kundenGet = kundenGet;
         this.projekteAdd = projekteAdd;
+        this.projekteGet = projekteGet;
         this.jwtUtil = jwtUtil;
     }
 
@@ -65,6 +68,7 @@ public class ConfigController {
         return new ResponseEntity<>(kunden, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/add-projekte", method = RequestMethod.POST)
     public ResponseEntity<?> addProjekte(@RequestBody ArrayList<ProjektViewModel> projektViewModels,
                                          @RequestHeader String authorization) {
         try {
@@ -73,5 +77,10 @@ public class ConfigController {
             return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/projekte", method = RequestMethod.POST)
+    public ResponseEntity<?> getProjekte(@RequestHeader String authorization) {
+        return new ResponseEntity<>(projekteGet.get(getUsernameFromToken(authorization)), HttpStatus.OK);
     }
 }
