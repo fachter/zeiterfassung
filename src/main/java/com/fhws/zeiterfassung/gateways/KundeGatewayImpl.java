@@ -1,6 +1,7 @@
 package com.fhws.zeiterfassung.gateways;
 
 import com.fhws.zeiterfassung.entities.Kunde;
+import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.repositories.KundeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class KundeGatewayImpl implements KundeGateway {
     @Override
     public ArrayList<Kunde> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public ArrayList<Kunde> getAllByUser(User user) {
+        return repository.findAllByCreatedBy(user);
     }
 
     @Override

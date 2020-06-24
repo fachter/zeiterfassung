@@ -2,6 +2,6 @@ package com.fhws.zeiterfassung.models;
 
 public class KundenViewModel {
 
-    public int id;
+    public Long id;
     public String kundenName;
 }
