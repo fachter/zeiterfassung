@@ -8,13 +8,14 @@ import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.models.KundenViewModel;
 import com.fhws.zeiterfassung.models.ProjektViewModel;
-import com.fhws.zeiterfassung.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+
+import static com.fhws.zeiterfassung.utils.LoggedInUserUtil.getUsernameFromAuthorizationToken;
 
 @RestController
 public class ConfigController {
@@ -23,24 +24,22 @@ public class ConfigController {
     private final KundenGet kundenGet;
     private final ProjekteAdd projekteAdd;
     private final ProjekteGet projekteGet;
-    private final JwtUtil jwtUtil;
 
     @Autowired
     public ConfigController(KundenAdd kundenAdd,
                             KundenGet kundenGet,
                             ProjekteAdd projekteAdd,
-                            ProjekteGet projekteGet, JwtUtil jwtUtil) {
+                            ProjekteGet projekteGet) {
         this.kundenAdd = kundenAdd;
         this.kundenGet = kundenGet;
         this.projekteAdd = projekteAdd;
         this.projekteGet = projekteGet;
-        this.jwtUtil = jwtUtil;
     }
 
     @RequestMapping(value = "/add-kunden", method = RequestMethod.POST)
     public ResponseEntity<?> addKunden(@RequestBody ArrayList<KundenViewModel> kundenViewModels,
                                        @RequestHeader String authorization) {
-        String usernameFromToken = getUsernameFromToken(authorization);
+        String usernameFromToken = getUsernameFromAuthorizationToken(authorization);
         try {
             kundenAdd.add(kundenViewModels, usernameFromToken);
         } catch (InvalidDataException e) {
@@ -51,14 +50,9 @@ public class ConfigController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private String getUsernameFromToken(String authorization) {
-        String token = authorization.substring(7);
-        return jwtUtil.extractUsername(token);
-    }
-
     @RequestMapping(value = "/kunden", method = RequestMethod.POST)
     public ResponseEntity<?> getKunden(@RequestHeader String authorization) {
-        String usernameFromToken = getUsernameFromToken(authorization);
+        String usernameFromToken = getUsernameFromAuthorizationToken(authorization);
         ArrayList<KundenViewModel> kunden = null;
         try {
             kunden = kundenGet.get(usernameFromToken);
@@ -72,7 +66,7 @@ public class ConfigController {
     public ResponseEntity<?> addProjekte(@RequestBody ArrayList<ProjektViewModel> projektViewModels,
                                          @RequestHeader String authorization) {
         try {
-            projekteAdd.add(projektViewModels, getUsernameFromToken(authorization));
+            projekteAdd.add(projektViewModels, getUsernameFromAuthorizationToken(authorization));
         } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
         }
@@ -82,7 +76,7 @@ public class ConfigController {
     @RequestMapping(value = "/projekte", method = RequestMethod.POST)
     public ResponseEntity<?> getProjekte(@RequestHeader String authorization) {
         try {
-            return new ResponseEntity<>(projekteGet.get(getUsernameFromToken(authorization)), HttpStatus.OK);
+            return new ResponseEntity<>(projekteGet.get(getUsernameFromAuthorizationToken(authorization)), HttpStatus.OK);
         } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>("User does not exist!", HttpStatus.FORBIDDEN);
         }
