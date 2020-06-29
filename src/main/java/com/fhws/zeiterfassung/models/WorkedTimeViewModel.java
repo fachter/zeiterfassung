@@ -2,7 +2,7 @@ package com.fhws.zeiterfassung.models;
 
 import java.time.LocalDateTime;
 
-public class TimeViewModel {
+public class WorkedTimeViewModel {
 
     public Long id;
     public LocalDateTime startTime;

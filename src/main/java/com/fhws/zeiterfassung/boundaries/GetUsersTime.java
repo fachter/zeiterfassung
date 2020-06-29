@@ -1,10 +1,11 @@
 package com.fhws.zeiterfassung.boundaries;
 
-import com.fhws.zeiterfassung.models.TimeViewModel;
+import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
+import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 
 import java.util.ArrayList;
 
 public interface GetUsersTime {
 
-    ArrayList<TimeViewModel> get(String username);
+    ArrayList<WorkedTimeViewModel> get(String username) throws UserDoesNotExistException;
 }

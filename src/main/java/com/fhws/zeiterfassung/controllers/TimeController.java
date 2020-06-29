@@ -2,7 +2,7 @@ package com.fhws.zeiterfassung.controllers;
 
 import com.fhws.zeiterfassung.boundaries.GetUsersTime;
 import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
-import com.fhws.zeiterfassung.models.TimeViewModel;
+import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class TimeController {
     }
 
     @RequestMapping(value = "/add-times", method = RequestMethod.POST)
-    public ResponseEntity<?> addTimes(@RequestBody ArrayList<TimeViewModel> timeViewModels, @RequestHeader String authorization) {
+    public ResponseEntity<?> addTimes(@RequestBody ArrayList<WorkedTimeViewModel> workedTimeViewModels, @RequestHeader String authorization) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
