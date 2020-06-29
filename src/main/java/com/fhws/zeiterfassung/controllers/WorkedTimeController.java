@@ -1,7 +1,8 @@
 package com.fhws.zeiterfassung.controllers;
 
-import com.fhws.zeiterfassung.boundaries.GetUsersTime;
+import com.fhws.zeiterfassung.boundaries.GetUsersWorkedTime;
 import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
+import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-public class TimeController {
+public class WorkedTimeController {
 
     private final LoggedInUserUtil loggedInUserUtil;
-    private final GetUsersTime getUsersTime;
+    private final GetUsersWorkedTime getUsersWorkedTime;
     private final SaveUsersTime saveUsersTime;
 
     @Autowired
-    public TimeController(LoggedInUserUtil loggedInUserUtil,
-                          GetUsersTime getUsersTime,
-                          SaveUsersTime saveUsersTime) {
+    public WorkedTimeController(LoggedInUserUtil loggedInUserUtil,
+                                GetUsersWorkedTime getUsersWorkedTime,
+                                SaveUsersTime saveUsersTime) {
         this.loggedInUserUtil = loggedInUserUtil;
-        this.getUsersTime = getUsersTime;
+        this.getUsersWorkedTime = getUsersWorkedTime;
         this.saveUsersTime = saveUsersTime;
     }
 
@@ -32,7 +33,14 @@ public class TimeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/times", method = RequestMethod.POST)
     public ResponseEntity<?> getTimes(@RequestHeader String authorization) {
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(
+                    getUsersWorkedTime.get(loggedInUserUtil.getUsernameFromAuthorizationToken(authorization)),
+                    HttpStatus.OK);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+        }
     }
 }
