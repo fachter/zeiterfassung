@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.controllers;
 
 import com.fhws.zeiterfassung.boundaries.GetUsersWorkedTime;
 import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
+import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
@@ -30,6 +31,13 @@ public class WorkedTimeController {
 
     @RequestMapping(value = "/add-times", method = RequestMethod.POST)
     public ResponseEntity<?> addTimes(@RequestBody ArrayList<WorkedTimeViewModel> workedTimeViewModels, @RequestHeader String authorization) {
+        try {
+            saveUsersTime.save(workedTimeViewModels, loggedInUserUtil.getUsernameFromAuthorizationToken(authorization));
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+        } catch (InvalidDataException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
