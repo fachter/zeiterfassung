@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-@CrossOrigin(origins = "http://localhost:8082")
 @RestController
 public class WorkedTimeController {
 
