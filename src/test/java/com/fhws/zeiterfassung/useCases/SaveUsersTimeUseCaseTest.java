@@ -33,13 +33,18 @@ import static org.mockito.Mockito.*;
 class SaveUsersTimeUseCaseTest {
 
     private SaveUsersTime saveUsersTime;
-    @Mock private UserGateway userGatewayMock;
-    @Mock private WorkedTimeGateway workedTimeGatewayMock;
-    @Mock private KundeGateway kundeGatewayMock;
-    @Mock private ProjektGateway projektGatewayMock;
+    @Mock
+    private UserGateway userGatewayMock;
+    @Mock
+    private WorkedTimeGateway workedTimeGatewayMock;
+    @Mock
+    private KundeGateway kundeGatewayMock;
+    @Mock
+    private ProjektGateway projektGatewayMock;
     private final String validUsername = "validUsername";
     private User validUser;
-    @Captor private ArgumentCaptor<ArrayList<WorkedTime>> captor;
+    @Captor
+    private ArgumentCaptor<ArrayList<WorkedTime>> captor;
 
     @BeforeEach
     void setUp() {
@@ -78,14 +83,14 @@ class SaveUsersTimeUseCaseTest {
         kundenViewModel.id = null;
         kundenViewModel.kundenName = "Test Kunde";
         viewModel.kundenViewModel = kundenViewModel;
-        viewModel.startTime = LocalDateTime.of(2020,1,2,3,4,5,6);
-        viewModel.endTime = LocalDateTime.of(2020, 1,2,4,4,5,6);
+        viewModel.startTime = LocalDateTime.of(2020, 1, 2, 3, 4, 5, 6);
+        viewModel.endTime = LocalDateTime.of(2020, 1, 2, 4, 4, 5, 6);
         workedTimeViewModels.add(viewModel);
         WorkedTime expectedWorkedTime = new WorkedTime()
                 .setKunde(new Kunde().setKundenName("Test Kunde"))
                 .setProjekt(new Projekt().setProjektName("Test Projekt"))
-                .setStartTime(LocalDateTime.of(2020,1,2,3,4))
-                .setEndTime(LocalDateTime.of(2020,1,2,4,4))
+                .setStartTime(LocalDateTime.of(2020, 1, 2, 3, 4))
+                .setEndTime(LocalDateTime.of(2020, 1, 2, 4, 4))
                 .setBeschreibung("Test");
         expectedWorkedTime.setCreatedBy(validUser);
 
@@ -163,9 +168,9 @@ class SaveUsersTimeUseCaseTest {
         projekt.setId(5L);
         projekte.add(projekt);
         prepareGatewayMock(new ArrayList<>(), projekte);
+
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
         WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
-
         ProjektViewModel projektViewModel = new ProjektViewModel();
         projektViewModel.id = 5L;
         projektViewModel.projektName = "Test Projekt";
@@ -186,5 +191,87 @@ class SaveUsersTimeUseCaseTest {
         viewModel.endTime = LocalDateTime.now();
         viewModel.beschreibung = "Test";
         return viewModel;
+    }
+
+    @Test
+    public void givenNewKundeAndNewProjekt() throws Exception {
+        prepareGatewayMock(new ArrayList<>(), new ArrayList<>());
+        ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
+        WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
+        viewModel.startTime = LocalDateTime.of(2020,1,1,20,15,0,0);
+        viewModel.endTime = LocalDateTime.of(2020,1,1,22,15,0,0);
+        viewModel.beschreibung = "Beschreibung";
+        ProjektViewModel projektViewModel = new ProjektViewModel();
+        projektViewModel.id = -5L;
+        projektViewModel.projektName = "Test Projekt";
+        viewModel.projektViewModel = projektViewModel;
+        KundenViewModel kundenViewModel = new KundenViewModel();
+        kundenViewModel.id = -3L;
+        kundenViewModel.kundenName = "Test Kunde";
+        viewModel.kundenViewModel = kundenViewModel;
+        workedTimeViewModels.add(viewModel);
+        WorkedTime expectedWorkedTime = new WorkedTime()
+                .setBeschreibung("Beschreibung")
+                .setStartTime(LocalDateTime.of(2020,1,1,20,15,0,0))
+                .setEndTime(LocalDateTime.of(2020,1,1,22,15,0,0))
+                .setKunde(new Kunde().setKundenName("Test Kunde"))
+                .setProjekt(new Projekt().setProjektName("Test Projekt"));
+        expectedWorkedTime.setCreatedBy(validUser);
+
+        saveUsersTime.save(workedTimeViewModels, validUsername);
+
+        verify(workedTimeGatewayMock, times(1)).saveAll(captor.capture());
+        ArrayList<WorkedTime> workedTimes = captor.getValue();
+        assertEquals(1, workedTimes.size());
+        assertThat(workedTimes.get(0)).usingRecursiveComparison().isEqualTo(expectedWorkedTime);
+
+    }
+
+    @Test
+    public void givenNewKundeAndNewProjekt2Times() throws Exception {
+        prepareGatewayMock(new ArrayList<>(), new ArrayList<>());
+        ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
+        WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
+        viewModel.startTime = LocalDateTime.of(2020,1,1,20,15,0,0);
+        viewModel.endTime = LocalDateTime.of(2020,1,1,22,15,0,0);
+        viewModel.beschreibung = "Beschreibung";
+        ProjektViewModel projektViewModel1 = new ProjektViewModel();
+        projektViewModel1.id = -5L;
+        projektViewModel1.projektName = "Test Projekt";
+        viewModel.projektViewModel = projektViewModel1;
+        KundenViewModel kundenViewModel1 = new KundenViewModel();
+        kundenViewModel1.id = -3L;
+        kundenViewModel1.kundenName = "Test Kunde";
+        viewModel.kundenViewModel = kundenViewModel1;
+        workedTimeViewModels.add(viewModel);
+        WorkedTimeViewModel viewModel2 = getWorkedTimeViewModel();
+        viewModel2.startTime = LocalDateTime.of(2020,1,1,20,15,0,0);
+        viewModel2.endTime = LocalDateTime.of(2020,1,1,22,15,0,0);
+        viewModel2.beschreibung = "Beschreibung";
+        ProjektViewModel projektViewModel2 = new ProjektViewModel();
+        projektViewModel2.id = -5L;
+        projektViewModel2.projektName = "Test Projekt";
+        viewModel2.projektViewModel = projektViewModel2;
+        KundenViewModel kundenViewModel2 = new KundenViewModel();
+        kundenViewModel2.id = -3L;
+        kundenViewModel2.kundenName = "Test Kunde";
+        viewModel2.kundenViewModel = kundenViewModel2;
+        workedTimeViewModels.add(viewModel2);
+        WorkedTime expectedWorkedTime = new WorkedTime()
+                .setBeschreibung("Beschreibung")
+                .setStartTime(LocalDateTime.of(2020,1,1,20,15,0,0))
+                .setEndTime(LocalDateTime.of(2020,1,1,22,15,0,0))
+                .setKunde(new Kunde().setKundenName("Test Kunde"))
+                .setProjekt(new Projekt().setProjektName("Test Projekt"));
+        expectedWorkedTime.setCreatedBy(validUser);
+
+        saveUsersTime.save(workedTimeViewModels, validUsername);
+
+        verify(workedTimeGatewayMock, times(1)).saveAll(captor.capture());
+        ArrayList<WorkedTime> workedTimes = captor.getValue();
+        assertEquals(2, workedTimes.size());
+        assertThat(workedTimes.get(0)).usingRecursiveComparison().isEqualTo(expectedWorkedTime);
+        assertEquals(workedTimes.get(0).getKunde(), workedTimes.get(1).getKunde());
+        assertEquals(workedTimes.get(0).getProjekt(), workedTimes.get(1).getProjekt());
     }
 }

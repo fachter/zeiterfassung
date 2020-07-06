@@ -11,10 +11,15 @@ import com.fhws.zeiterfassung.gateways.KundeGateway;
 import com.fhws.zeiterfassung.gateways.ProjektGateway;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.gateways.WorkedTimeGateway;
+import com.fhws.zeiterfassung.models.KundenViewModel;
+import com.fhws.zeiterfassung.models.ProjektViewModel;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -28,6 +33,8 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private ArrayList<Kunde> kundenFromDb;
     private ArrayList<Projekt> projekteFromDb;
     private final ArrayList<WorkedTime> workedTimesToPersist = new ArrayList<>();
+    private final ArrayList<Kunde> nonPersistedKunden = new ArrayList<>();
+    private final ArrayList<Projekt> nonPersistedProjekte = new ArrayList<>();
     private User loggedInUser;
 
     public SaveUsersTimeUseCase(UserGateway userGateway, WorkedTimeGateway workedTimeGateway, KundeGateway kundeGateway, ProjektGateway projektGateway) {
@@ -60,18 +67,24 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
                 .setBeschreibung(timeViewModel.beschreibung)
                 .setStartTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.startTime))
                 .setEndTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.endTime))
-                .setKunde(getKundeFromViewModel(timeViewModel))
-                .setProjekt(getProjektFromViewModel(timeViewModel));
+                .setKunde(getKundeFromViewModel(timeViewModel.kundenViewModel))
+                .setProjekt(getProjektFromViewModel(timeViewModel.projektViewModel));
         workedTime.setCreatedBy(loggedInUser);
         return workedTime;
     }
 
-    private Projekt getProjektFromViewModel(WorkedTimeViewModel timeViewModel) {
-        if (timeViewModel.projektViewModel == null)
+    private Projekt getProjektFromViewModel(ProjektViewModel projektViewModel) {
+        if (projektViewModel == null)
             return null;
-        if (timeViewModel.projektViewModel.id != null)
-            return getProjektById(timeViewModel.projektViewModel.id);
-        return new Projekt().setProjektName(timeViewModel.projektViewModel.projektName);
+        if (projektViewModel.id != null && projektViewModel.id > 0)
+            return getProjektById(projektViewModel.id);
+        for (Projekt projekt : nonPersistedProjekte) {
+            if (projekt.getProjektName().equals(projektViewModel.projektName))
+                return projekt;
+        }
+        Projekt newProjekt = new Projekt().setProjektName(projektViewModel.projektName);
+        nonPersistedProjekte.add(newProjekt);
+        return newProjekt;
     }
 
     private Projekt getProjektById(Long id) {
@@ -82,12 +95,18 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
         return null;
     }
 
-    private Kunde getKundeFromViewModel(WorkedTimeViewModel timeViewModel) {
-        if (timeViewModel.kundenViewModel == null)
+    private Kunde getKundeFromViewModel(KundenViewModel kundenViewModel) {
+        if (kundenViewModel == null)
             return null;
-        if (timeViewModel.kundenViewModel.id != null)
-            return getKundeById(timeViewModel.kundenViewModel.id);
-        return new Kunde().setKundenName(timeViewModel.kundenViewModel.kundenName);
+        if (kundenViewModel.id != null && kundenViewModel.id > 0)
+            return getKundeById(kundenViewModel.id);
+        for (Kunde kunde : nonPersistedKunden) {
+            if (kunde.getKundenName().equals(kundenViewModel.kundenName))
+                return kunde;
+        }
+        Kunde newKunde = new Kunde().setKundenName(kundenViewModel.kundenName);
+        nonPersistedKunden.add(newKunde);
+        return newKunde;
     }
 
     private Kunde getKundeById(Long id) {
