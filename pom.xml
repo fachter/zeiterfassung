@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.fhws</groupId>
-    <artifactId>zeiterfassung</artifactId>
+    <artifactId>zeiterfassung-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>zeiterfassung</name>
+    <name>zeiterfassung-backend</name>
     <description>Backend für Zeiterfassung PWA</description>
 
     <properties>
