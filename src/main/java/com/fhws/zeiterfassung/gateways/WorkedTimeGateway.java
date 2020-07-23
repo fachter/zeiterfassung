@@ -10,4 +10,6 @@ public interface WorkedTimeGateway {
     ArrayList<WorkedTime> getAllByUser(User user);
 
     void saveAll(ArrayList<WorkedTime> workedTimes);
+
+    void flush();
 }

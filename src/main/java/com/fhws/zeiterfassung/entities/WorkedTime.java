@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,11 +13,11 @@ public class WorkedTime extends BaseEntity {
     private LocalDateTime endTime;
     private String beschreibung;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "kunde_id")
     private Kunde kunde;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "projekt_id")
     private Projekt projekt;
 

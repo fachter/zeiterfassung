@@ -75,9 +75,13 @@ class SaveUsersTimeUseCaseTest {
         viewModel.startTime = LocalDateTime.of(2020,1,2,3,4,5,6);
         viewModel.endTime = LocalDateTime.of(2020, 1,2,4,4,5,6);
         workedTimeViewModels.add(viewModel);
+        Kunde expectedKunde = new Kunde().setKundenName("Test Kunde");
+        expectedKunde.setCreatedBy(validUser);
+        Projekt expectedProjekt = new Projekt().setProjektName("Test Projekt");
+        expectedProjekt.setCreatedBy(validUser);
         WorkedTime expectedWorkedTime = new WorkedTime()
-                .setKunde(new Kunde().setKundenName("Test Kunde"))
-                .setProjekt(new Projekt().setProjektName("Test Projekt"))
+                .setKunde(expectedKunde)
+                .setProjekt(expectedProjekt)
                 .setStartTime(LocalDateTime.of(2020,1,2,3,4))
                 .setEndTime(LocalDateTime.of(2020,1,2,4,4))
                 .setBeschreibung("Test");

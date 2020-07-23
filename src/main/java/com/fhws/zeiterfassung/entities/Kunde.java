@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -11,7 +12,7 @@ public class Kunde extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String kundenName;
 
-    @OneToMany
+    @OneToMany(mappedBy = "kunde",cascade = CascadeType.ALL)
     private Set<WorkedTime> workedTimes;
 
     public String getKundenName() {

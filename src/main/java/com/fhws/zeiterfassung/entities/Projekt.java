@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.Set;
@@ -9,7 +10,7 @@ public class Projekt extends BaseEntity {
 
     private String projektName;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projekt",cascade = CascadeType.ALL)
     private Set<WorkedTime> workedTimes;
 
     public String getProjektName() {

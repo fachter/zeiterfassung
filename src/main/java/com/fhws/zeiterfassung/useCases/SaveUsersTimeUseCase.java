@@ -28,12 +28,15 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private final ProjektGateway projektGateway;
     private ArrayList<Kunde> kundenFromDb;
     private ArrayList<Projekt> projekteFromDb;
-    private final ArrayList<Kunde> newKunden = new ArrayList<>();
-    private final ArrayList<Projekt> newProjekte = new ArrayList<>();
-    private final ArrayList<WorkedTime> workedTimesToPersist = new ArrayList<>();
+    private ArrayList<Kunde> newKunden;
+    private ArrayList<Projekt> newProjekte;
+    private ArrayList<WorkedTime> workedTimesToPersist;
     private User loggedInUser;
 
-    public SaveUsersTimeUseCase(UserGateway userGateway, WorkedTimeGateway workedTimeGateway, KundeGateway kundeGateway, ProjektGateway projektGateway) {
+    public SaveUsersTimeUseCase(UserGateway userGateway,
+                                WorkedTimeGateway workedTimeGateway,
+                                KundeGateway kundeGateway,
+                                ProjektGateway projektGateway) {
         this.userGateway = userGateway;
         this.workedTimeGateway = workedTimeGateway;
         this.kundeGateway = kundeGateway;
@@ -43,19 +46,20 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     @Override
     public void save(ArrayList<WorkedTimeViewModel> workedTimeViewModels, String username) throws UserDoesNotExistException, InvalidDataException {
         loggedInUser = userGateway.getUserByUsername(username);
-        getKundenAndProjekteFromDb();
-        for (WorkedTimeViewModel timeViewModel : workedTimeViewModels) {
+        initKundenAndProjekteLists();
+        for (WorkedTimeViewModel timeViewModel : workedTimeViewModels)
             workedTimesToPersist.add(getWorkedTimeFromViewModel(timeViewModel));
-        }
 
         if (workedTimesToPersist.size() > 0)
             workedTimeGateway.saveAll(workedTimesToPersist);
-
     }
 
-    private void getKundenAndProjekteFromDb() {
+    private void initKundenAndProjekteLists() {
         kundenFromDb = kundeGateway.getAllByUser(loggedInUser);
         projekteFromDb = projektGateway.getAllByUser(loggedInUser);
+        newKunden = new ArrayList<>();
+        newProjekte = new ArrayList<>();
+        workedTimesToPersist = new ArrayList<>();
     }
 
     private WorkedTime getWorkedTimeFromViewModel(WorkedTimeViewModel timeViewModel) throws InvalidDataException {
@@ -85,6 +89,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
                 return projekt;
         }
         Projekt projekt = new Projekt().setProjektName(projektViewModel.projektName);
+        projekt.setCreatedBy(loggedInUser);
         newProjekte.add(projekt);
         return projekt;
     }
@@ -113,6 +118,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
                 return kunde;
         }
         Kunde kunde = new Kunde().setKundenName(kundenViewModel.kundenName);
+        kunde.setCreatedBy(loggedInUser);
         newKunden.add(kunde);
         return kunde;
     }

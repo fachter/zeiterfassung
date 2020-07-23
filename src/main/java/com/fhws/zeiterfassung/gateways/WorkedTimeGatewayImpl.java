@@ -25,4 +25,8 @@ public class WorkedTimeGatewayImpl implements WorkedTimeGateway {
     public void saveAll(ArrayList<WorkedTime> workedTimes) {
         repository.saveAll(workedTimes);
     }
+
+    public void flush() {
+        repository.flush();
+    }
 }
