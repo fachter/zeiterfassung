@@ -68,6 +68,7 @@ class GetUsersWorkedTimeUseCaseTest {
         projekt.setId(321L);
         WorkedTime time = new WorkedTime()
                 .setBeschreibung("Beschreibung")
+                .setBreakInMinutes(30)
                 .setStartTime(startTime)
                 .setEndTime(endTime)
                 .setKunde(kunde)
@@ -80,6 +81,7 @@ class GetUsersWorkedTimeUseCaseTest {
         expectedViewModel.beschreibung = "Beschreibung";
         expectedViewModel.startTime = LocalDateTime.of(2020,1,1,20,20);
         expectedViewModel.endTime = LocalDateTime.of(2020,1,1,21,0);
+        expectedViewModel.breakInMinutes = 30;
         KundenViewModel kundenViewModel = new KundenViewModel();
         kundenViewModel.id = 123L;
         kundenViewModel.kundenName = "Test Kunde";

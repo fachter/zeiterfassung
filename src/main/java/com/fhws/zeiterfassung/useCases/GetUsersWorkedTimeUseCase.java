@@ -39,6 +39,7 @@ public class GetUsersWorkedTimeUseCase implements GetUsersWorkedTime {
         WorkedTimeViewModel timeViewModel = new WorkedTimeViewModel();
         timeViewModel.id = time.getId();
         timeViewModel.beschreibung = time.getBeschreibung();
+        timeViewModel.breakInMinutes = time.getBreakInMinutes();
         timeViewModel.startTime = time.getStartTime();
         timeViewModel.endTime = time.getEndTime();
         timeViewModel.kundenViewModel = getKundenViewModel(time);
