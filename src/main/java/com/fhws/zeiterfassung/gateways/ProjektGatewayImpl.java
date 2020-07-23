@@ -2,6 +2,7 @@ package com.fhws.zeiterfassung.gateways;
 
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
+import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.repositories.ProjektRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,14 @@ public class ProjektGatewayImpl implements ProjektGateway {
     @Override
     public ArrayList<Projekt> getAllByUser(User user) {
         return repository.findAllByCreatedBy(user);
+    }
+
+    @Override
+    public void removeProjekte(ArrayList<Projekt> projekte) throws InvalidDataException {
+        try {
+            repository.deleteAll(projekte);
+        } catch (Exception e) {
+            throw new InvalidDataException();
+        }
     }
 }

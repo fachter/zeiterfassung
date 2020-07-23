@@ -59,7 +59,8 @@ public class KundenAddUseCase implements KundenAdd {
     private void removeKunde(KundenViewModel viewModel) {
         try {
             kundenToRemove.add(getKundeFromDb(viewModel));
-        } catch (KundeNotFoundException ignored) {}
+        } catch (KundeNotFoundException ignored) {
+        }
     }
 
     private Kunde getKundeFromViewModel(KundenViewModel viewModel) {

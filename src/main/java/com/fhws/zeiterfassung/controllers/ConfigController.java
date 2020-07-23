@@ -71,6 +71,8 @@ public class ConfigController {
             projekteAdd.add(projektViewModels, loggedInUserUtil.getUsernameFromAuthorizationToken(authorization));
         } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+        } catch (InvalidDataException e) {
+            return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
