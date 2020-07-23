@@ -10,5 +10,6 @@ public class WorkedTimeViewModel {
     public String beschreibung;
     public KundenViewModel kundenViewModel;
     public ProjektViewModel projektViewModel;
+    public int breakInMinutes = 0;
 
 }
