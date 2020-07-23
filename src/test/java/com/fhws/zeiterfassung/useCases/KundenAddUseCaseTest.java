@@ -133,4 +133,64 @@ class KundenAddUseCaseTest {
         assertThat(persistedKunden.get(2)).usingRecursiveComparison().isEqualTo(expectedKunde3);
         assertThat(persistedKunden.get(3)).usingRecursiveComparison().isEqualTo(expectedKunde4);
     }
+
+    @Test
+    public void add_givenDeleteNonPersitedKunde() throws Exception {
+        when(userGatewayMock.getUserByUsername(validUsername)).thenReturn(validUser);
+        ArrayList<KundenViewModel> kundenViewModels = new ArrayList<>();
+        KundenViewModel k1 = new KundenViewModel();
+        k1.kundenName = "Does not matter";
+        k1.deleted = true;
+        kundenViewModels.add(k1);
+
+        kundenAdd.add(kundenViewModels, validUsername);
+
+        verify(kundeGatewayMock, times(0)).addKunden(captor.capture());
+    }
+
+    @Test
+    public void add_givenChangeExistingKunde() throws Exception {
+        when(userGatewayMock.getUserByUsername(validUsername)).thenReturn(validUser);
+        ArrayList<Kunde> kunden = new ArrayList<>();
+        Kunde kunde = new Kunde().setKundenName("Kunde");
+        kunde.setId(123L);
+        kunden.add(kunde);
+        when(kundeGatewayMock.getAllByUser(validUser)).thenReturn(kunden);
+        ArrayList<KundenViewModel> kundenViewModels = new ArrayList<>();
+        KundenViewModel k1 = new KundenViewModel();
+        k1.kundenName = "new Name";
+        k1.id = 123L;
+        kundenViewModels.add(k1);
+
+        kundenAdd.add(kundenViewModels, validUsername);
+
+        verify(kundeGatewayMock, times(1)).addKunden(captor.capture());
+        ArrayList<Kunde> persistedKunden = captor.getValue();
+        assertEquals(1, persistedKunden.size());
+        assertEquals(kunde, persistedKunden.get(0));
+        assertEquals("new Name", persistedKunden.get(0).getKundenName());
+    }
+
+    @Test
+    public void add_givenDeleteExistingKunde() throws Exception {
+        when(userGatewayMock.getUserByUsername(validUsername)).thenReturn(validUser);
+        ArrayList<Kunde> kunden = new ArrayList<>();
+        Kunde kunde = new Kunde().setKundenName("Kunde");
+        kunde.setId(123L);
+        kunden.add(kunde);
+        when(kundeGatewayMock.getAllByUser(validUser)).thenReturn(kunden);
+        ArrayList<KundenViewModel> kundenViewModels = new ArrayList<>();
+        KundenViewModel k1 = new KundenViewModel();
+        k1.kundenName = "Kunde";
+        k1.id = 123L;
+        k1.deleted = true;
+        kundenViewModels.add(k1);
+
+        kundenAdd.add(kundenViewModels, validUsername);
+
+        verify(kundeGatewayMock, times(0)).addKunden(any());
+        verify(kundeGatewayMock, times(1)).removeKunden(captor.capture());
+        ArrayList<Kunde> kundenToRemove = captor.getValue();
+        assertEquals(kunde, kundenToRemove.get(0));
+    }
 }

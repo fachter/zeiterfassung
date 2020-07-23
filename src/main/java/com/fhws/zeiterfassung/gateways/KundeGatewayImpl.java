@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.gateways;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
+import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.repositories.KundeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,14 @@ public class KundeGatewayImpl implements KundeGateway {
         if (kunde == null)
             throw new EntityNotFoundException();
         return kunde;
+    }
+
+    @Override
+    public void removeKunden(ArrayList<Kunde> kunden) throws InvalidDataException {
+        try {
+            repository.deleteAll(kunden);
+        } catch (Exception e) {
+            throw new InvalidDataException();
+        }
     }
 }

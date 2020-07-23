@@ -3,6 +3,7 @@ package com.fhws.zeiterfassung.gateways;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
+import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 
 import java.util.ArrayList;
 
@@ -15,4 +16,6 @@ public interface KundeGateway {
     void addKunden(ArrayList<Kunde> kunden);
 
     Kunde getById(Long id) throws EntityNotFoundException;
+
+    void removeKunden(ArrayList<Kunde> kunden) throws InvalidDataException;
 }
