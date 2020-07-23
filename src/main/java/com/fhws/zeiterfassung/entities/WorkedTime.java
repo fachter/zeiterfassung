@@ -12,6 +12,7 @@ public class WorkedTime extends BaseEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String beschreibung;
+    private int breakInMinutes;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "kunde_id")
@@ -63,6 +64,15 @@ public class WorkedTime extends BaseEntity {
 
     public WorkedTime setProjekt(Projekt projekt) {
         this.projekt = projekt;
+        return this;
+    }
+
+    public int getBreakInMinutes() {
+        return breakInMinutes;
+    }
+
+    public WorkedTime setBreakInMinutes(int breakInMinutes) {
+        this.breakInMinutes = breakInMinutes;
         return this;
     }
 }

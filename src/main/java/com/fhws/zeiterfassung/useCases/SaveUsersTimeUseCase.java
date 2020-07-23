@@ -65,6 +65,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private WorkedTime getWorkedTimeFromViewModel(WorkedTimeViewModel timeViewModel) throws InvalidDataException {
         WorkedTime workedTime = new WorkedTime()
                 .setBeschreibung(timeViewModel.beschreibung)
+                .setBreakInMinutes(timeViewModel.breakInMinutes)
                 .setStartTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.startTime))
                 .setEndTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.endTime))
                 .setKunde(getKundeFromViewModel(timeViewModel.kundenViewModel))
