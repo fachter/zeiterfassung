@@ -19,7 +19,7 @@ public class KundenAddUseCase implements KundenAdd {
 
     private final KundeGateway kundeGateway;
     private final UserGateway userGateway;
-    private ArrayList<Kunde> kundenToAdd = new ArrayList<>();
+    private final ArrayList<Kunde> kundenToAdd = new ArrayList<>();
     private User user;
 
     @Autowired

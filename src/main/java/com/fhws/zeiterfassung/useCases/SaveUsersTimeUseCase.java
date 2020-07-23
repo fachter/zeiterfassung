@@ -5,12 +5,15 @@ import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;
+import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.gateways.KundeGateway;
 import com.fhws.zeiterfassung.gateways.ProjektGateway;
 import com.fhws.zeiterfassung.gateways.UserGateway;
 import com.fhws.zeiterfassung.gateways.WorkedTimeGateway;
+import com.fhws.zeiterfassung.models.KundenViewModel;
+import com.fhws.zeiterfassung.models.ProjektViewModel;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +48,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
             workedTimesToPersist.add(getWorkedTimeFromViewModel(timeViewModel));
         }
 
-        if (workedTimesToPersist.size() >0)
+        if (workedTimesToPersist.size() > 0)
             workedTimeGateway.saveAll(workedTimesToPersist);
 
     }
@@ -69,33 +72,37 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private Projekt getProjektFromViewModel(WorkedTimeViewModel timeViewModel) {
         if (timeViewModel.projektViewModel == null)
             return null;
-        if (timeViewModel.projektViewModel.id != null)
-            return getProjektById(timeViewModel.projektViewModel.id);
-        return new Projekt().setProjektName(timeViewModel.projektViewModel.projektName);
+        try {
+            return getProjektFromDb(timeViewModel.projektViewModel);
+        } catch (EntityNotFoundException e) {
+            return new Projekt().setProjektName(timeViewModel.projektViewModel.projektName);
+        }
     }
 
-    private Projekt getProjektById(Long id) {
+    private Projekt getProjektFromDb(ProjektViewModel viewModel) throws EntityNotFoundException {
         for (Projekt projekt : projekteFromDb) {
-            if (projekt.getId().equals(id))
+            if (Objects.equals(projekt.getId(), viewModel.id) || Objects.equals(projekt.getProjektName(), viewModel.projektName))
                 return projekt;
         }
-        return null;
+        throw new EntityNotFoundException();
     }
 
     private Kunde getKundeFromViewModel(WorkedTimeViewModel timeViewModel) {
         if (timeViewModel.kundenViewModel == null)
             return null;
-        if (timeViewModel.kundenViewModel.id != null)
-            return getKundeById(timeViewModel.kundenViewModel.id);
-        return new Kunde().setKundenName(timeViewModel.kundenViewModel.kundenName);
+        try {
+            return getKundeFromDb(timeViewModel.kundenViewModel);
+        } catch (EntityNotFoundException e) {
+            return new Kunde().setKundenName(timeViewModel.kundenViewModel.kundenName);
+        }
     }
 
-    private Kunde getKundeById(Long id) {
+    private Kunde getKundeFromDb(KundenViewModel viewModel) throws EntityNotFoundException {
         for (Kunde kunde : kundenFromDb) {
-            if (Objects.equals(kunde.getId(), id))
+            if (Objects.equals(kunde.getId(), viewModel.id) || Objects.equals(kunde.getKundenName(), viewModel.kundenName))
                 return kunde;
         }
-        return null;
+        throw new EntityNotFoundException();
     }
 
     private LocalDateTime getLocalDateTimeWithoutSecondsAndNanos(LocalDateTime time) throws InvalidDataException {

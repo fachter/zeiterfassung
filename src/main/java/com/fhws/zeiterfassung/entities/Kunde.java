@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 @Entity
 public class Kunde extends BaseEntity {
 
+    @Column(unique = true, nullable = false)
     private String kundenName;
 
     @OneToMany
