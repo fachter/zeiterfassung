@@ -55,7 +55,7 @@ public class ConfigController {
     @RequestMapping(value = "/kunden", method = RequestMethod.POST)
     public ResponseEntity<?> getKunden(@RequestHeader String authorization) {
         String usernameFromToken = loggedInUserUtil.getUsernameFromAuthorizationToken(authorization);
-        ArrayList<KundenViewModel> kunden = null;
+        ArrayList<KundenViewModel> kunden;
         try {
             kunden = kundenGet.get(usernameFromToken);
         } catch (UserDoesNotExistException e) {

@@ -9,7 +9,6 @@ import java.util.Set;
 @Entity
 public class Kunde extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
     private String kundenName;
 
     @OneToMany(mappedBy = "kunde",cascade = CascadeType.ALL)
