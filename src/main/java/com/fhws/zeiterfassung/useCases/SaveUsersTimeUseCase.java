@@ -5,9 +5,7 @@ import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
-import com.fhws.zeiterfassung.exceptions.InvalidDataException;
-import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
+import com.fhws.zeiterfassung.exceptions.*;
 import com.fhws.zeiterfassung.gateways.KundeGateway;
 import com.fhws.zeiterfassung.gateways.ProjektGateway;
 import com.fhws.zeiterfassung.gateways.UserGateway;
@@ -30,6 +28,8 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private final ProjektGateway projektGateway;
     private ArrayList<Kunde> kundenFromDb;
     private ArrayList<Projekt> projekteFromDb;
+    private final ArrayList<Kunde> newKunden = new ArrayList<>();
+    private final ArrayList<Projekt> newProjekte = new ArrayList<>();
     private final ArrayList<WorkedTime> workedTimesToPersist = new ArrayList<>();
     private User loggedInUser;
 
@@ -63,46 +63,66 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
                 .setBeschreibung(timeViewModel.beschreibung)
                 .setStartTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.startTime))
                 .setEndTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.endTime))
-                .setKunde(getKundeFromViewModel(timeViewModel))
-                .setProjekt(getProjektFromViewModel(timeViewModel));
+                .setKunde(getKundeFromViewModel(timeViewModel.kundenViewModel))
+                .setProjekt(getProjektFromViewModel(timeViewModel.projektViewModel));
         workedTime.setCreatedBy(loggedInUser);
         return workedTime;
     }
 
-    private Projekt getProjektFromViewModel(WorkedTimeViewModel timeViewModel) {
-        if (timeViewModel.projektViewModel == null)
+    private Projekt getProjektFromViewModel(ProjektViewModel projektViewModel) {
+        if (projektViewModel == null)
             return null;
         try {
-            return getProjektFromDb(timeViewModel.projektViewModel);
-        } catch (EntityNotFoundException e) {
-            return new Projekt().setProjektName(timeViewModel.projektViewModel.projektName);
+            return getProjektFromDb(projektViewModel);
+        } catch (ProjektNotFoundException e) {
+            return getNewProjekt(projektViewModel);
         }
     }
 
-    private Projekt getProjektFromDb(ProjektViewModel viewModel) throws EntityNotFoundException {
+    private Projekt getNewProjekt(ProjektViewModel projektViewModel) {
+        for (Projekt projekt : newProjekte) {
+            if (projekt.getProjektName().equals(projektViewModel.projektName))
+                return projekt;
+        }
+        Projekt projekt = new Projekt().setProjektName(projektViewModel.projektName);
+        newProjekte.add(projekt);
+        return projekt;
+    }
+
+    private Projekt getProjektFromDb(ProjektViewModel viewModel) throws ProjektNotFoundException {
         for (Projekt projekt : projekteFromDb) {
             if (Objects.equals(projekt.getId(), viewModel.id) || Objects.equals(projekt.getProjektName(), viewModel.projektName))
                 return projekt;
         }
-        throw new EntityNotFoundException();
+        throw new ProjektNotFoundException();
     }
 
-    private Kunde getKundeFromViewModel(WorkedTimeViewModel timeViewModel) {
-        if (timeViewModel.kundenViewModel == null)
+    private Kunde getKundeFromViewModel(KundenViewModel kundenViewModel) {
+        if (kundenViewModel == null)
             return null;
         try {
-            return getKundeFromDb(timeViewModel.kundenViewModel);
-        } catch (EntityNotFoundException e) {
-            return new Kunde().setKundenName(timeViewModel.kundenViewModel.kundenName);
+            return getKundeFromDb(kundenViewModel);
+        } catch (KundeNotFoundException e) {
+            return getNewKunde(kundenViewModel);
         }
     }
 
-    private Kunde getKundeFromDb(KundenViewModel viewModel) throws EntityNotFoundException {
+    private Kunde getNewKunde(KundenViewModel kundenViewModel) {
+        for (Kunde kunde : newKunden) {
+            if (kunde.getKundenName().equals(kundenViewModel.kundenName))
+                return kunde;
+        }
+        Kunde kunde = new Kunde().setKundenName(kundenViewModel.kundenName);
+        newKunden.add(kunde);
+        return kunde;
+    }
+
+    private Kunde getKundeFromDb(KundenViewModel viewModel) throws KundeNotFoundException {
         for (Kunde kunde : kundenFromDb) {
             if (Objects.equals(kunde.getId(), viewModel.id) || Objects.equals(kunde.getKundenName(), viewModel.kundenName))
                 return kunde;
         }
-        throw new EntityNotFoundException();
+        throw new KundeNotFoundException();
     }
 
     private LocalDateTime getLocalDateTimeWithoutSecondsAndNanos(LocalDateTime time) throws InvalidDataException {

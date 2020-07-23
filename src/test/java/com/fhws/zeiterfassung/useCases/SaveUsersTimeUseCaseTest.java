@@ -70,14 +70,8 @@ class SaveUsersTimeUseCaseTest {
         WorkedTimeViewModel viewModel = new WorkedTimeViewModel();
         viewModel.id = null;
         viewModel.beschreibung = "Test";
-        ProjektViewModel projektViewModel = new ProjektViewModel();
-        projektViewModel.id = null;
-        projektViewModel.projektName = "Test Projekt";
-        viewModel.projektViewModel = projektViewModel;
-        KundenViewModel kundenViewModel = new KundenViewModel();
-        kundenViewModel.id = null;
-        kundenViewModel.kundenName = "Test Kunde";
-        viewModel.kundenViewModel = kundenViewModel;
+        viewModel.projektViewModel = getProjektViewModel();
+        viewModel.kundenViewModel = getKundenViewModel("Test Kunde");
         viewModel.startTime = LocalDateTime.of(2020,1,2,3,4,5,6);
         viewModel.endTime = LocalDateTime.of(2020, 1,2,4,4,5,6);
         workedTimeViewModels.add(viewModel);
@@ -197,10 +191,7 @@ class SaveUsersTimeUseCaseTest {
         when(kundeGatewayMock.getAllByUser(validUser)).thenReturn(kunden);
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
         WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
-        KundenViewModel kundenViewModel = new KundenViewModel();
-        kundenViewModel.id = null;
-        kundenViewModel.kundenName = "Test Kundenname";
-        viewModel.kundenViewModel = kundenViewModel;
+        viewModel.kundenViewModel = getKundenViewModel("Test Kundenname");
         workedTimeViewModels.add(viewModel);
 
         saveUsersTime.save(workedTimeViewModels, validUsername);
@@ -209,6 +200,13 @@ class SaveUsersTimeUseCaseTest {
         ArrayList<WorkedTime> workedTimes = captor.getValue();
         assertEquals(1, workedTimes.size());
         assertEquals(kunde, workedTimes.get(0).getKunde());
+    }
+
+    private KundenViewModel getKundenViewModel(String s) {
+        KundenViewModel kundenViewModel = new KundenViewModel();
+        kundenViewModel.id = null;
+        kundenViewModel.kundenName = s;
+        return kundenViewModel;
     }
 
     @Test
@@ -221,10 +219,7 @@ class SaveUsersTimeUseCaseTest {
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
         WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
 
-        ProjektViewModel projektViewModel = new ProjektViewModel();
-        projektViewModel.id = null;
-        projektViewModel.projektName = "Test Projekt";
-        viewModel.projektViewModel = projektViewModel;
+        viewModel.projektViewModel = getProjektViewModel();
         workedTimeViewModels.add(viewModel);
 
         saveUsersTime.save(workedTimeViewModels, validUsername);
@@ -233,5 +228,50 @@ class SaveUsersTimeUseCaseTest {
         ArrayList<WorkedTime> workedTimes = captor.getValue();
         assertEquals(1, workedTimes.size());
         assertEquals(projekt, workedTimes.get(0).getProjekt());
+    }
+
+    private ProjektViewModel getProjektViewModel() {
+        ProjektViewModel projektViewModel = new ProjektViewModel();
+        projektViewModel.id = null;
+        projektViewModel.projektName = "Test Projekt";
+        return projektViewModel;
+    }
+
+    @Test
+    public void givenAddNonExistingKundeTwice() throws Exception {
+        prepareGatewayMock(new ArrayList<>(), new ArrayList<>());
+        ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
+        WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
+        viewModel.kundenViewModel = getKundenViewModel("Test Kunde");
+        WorkedTimeViewModel viewModel2 = getWorkedTimeViewModel();
+        viewModel2.kundenViewModel = getKundenViewModel("Test Kunde");
+        workedTimeViewModels.add(viewModel);
+        workedTimeViewModels.add(viewModel2);
+
+        saveUsersTime.save(workedTimeViewModels, validUsername);
+
+        verify(workedTimeGatewayMock, times(1)).saveAll(captor.capture());
+        ArrayList<WorkedTime> workedTimes = captor.getValue();
+        assertEquals(2, workedTimes.size());
+        assertEquals(workedTimes.get(0).getKunde(), workedTimes.get(1).getKunde());
+    }
+
+    @Test
+    public void givenAddNonExistingProjektTwice() throws Exception {
+        prepareGatewayMock(new ArrayList<>(), new ArrayList<>());
+        ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
+        WorkedTimeViewModel viewModel = getWorkedTimeViewModel();
+        viewModel.projektViewModel = getProjektViewModel();
+        WorkedTimeViewModel viewModel2 = getWorkedTimeViewModel();
+        viewModel2.projektViewModel = getProjektViewModel();
+        workedTimeViewModels.add(viewModel);
+        workedTimeViewModels.add(viewModel2);
+
+        saveUsersTime.save(workedTimeViewModels, validUsername);
+
+        verify(workedTimeGatewayMock, times(1)).saveAll(captor.capture());
+        ArrayList<WorkedTime> workedTimes = captor.getValue();
+        assertEquals(2, workedTimes.size());
+        assertEquals(workedTimes.get(0).getProjekt(), workedTimes.get(1).getProjekt());
     }
 }
