@@ -50,7 +50,7 @@ class GetUsersWorkedTimeUseCaseTest {
     @Test
     public void givenUserHasNoDbEntries() throws Exception {
         when(userGatewayMock.getUserByUsername(validUsername)).thenReturn(validUser);
-        when(workedTimeGatewayMock.getAllByUser(validUser)).thenReturn(new ArrayList<>());
+        when(workedTimeGatewayMock.getAllByUserOrderedByDate(validUser)).thenReturn(new ArrayList<>());
 
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = getUsersWorkedTime.get(validUsername);
 
@@ -91,7 +91,7 @@ class GetUsersWorkedTimeUseCaseTest {
         projektViewModel.id = 321L;
         projektViewModel.projektName = "Test Projekt";
         expectedViewModel.projektViewModel = projektViewModel;
-        when(workedTimeGatewayMock.getAllByUser(validUser)).thenReturn(times);
+        when(workedTimeGatewayMock.getAllByUserOrderedByDate(validUser)).thenReturn(times);
 
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = getUsersWorkedTime.get(validUsername);
 
@@ -121,7 +121,7 @@ class GetUsersWorkedTimeUseCaseTest {
         expectedViewModel.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,21,0));
         expectedViewModel.projektViewModel = null;
         expectedViewModel.kundenViewModel = null;
-        when(workedTimeGatewayMock.getAllByUser(validUser)).thenReturn(times);
+        when(workedTimeGatewayMock.getAllByUserOrderedByDate(validUser)).thenReturn(times);
 
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = getUsersWorkedTime.get(validUsername);
 
@@ -193,7 +193,7 @@ class GetUsersWorkedTimeUseCaseTest {
         kundenViewModel.id = 321L;
         kundenViewModel.kundenName = "Test Kunde";
         expectedViewModel3.kundenViewModel = kundenViewModel;
-        when(workedTimeGatewayMock.getAllByUser(validUser)).thenReturn(times);
+        when(workedTimeGatewayMock.getAllByUserOrderedByDate(validUser)).thenReturn(times);
 
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = getUsersWorkedTime.get(validUsername);
 

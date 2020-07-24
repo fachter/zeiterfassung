@@ -28,7 +28,7 @@ public class GetUsersWorkedTimeUseCase implements GetUsersWorkedTime {
     @Override
     public ArrayList<WorkedTimeViewModel> get(String username) throws UserDoesNotExistException {
         User user = userGateway.getUserByUsername(username);
-        ArrayList<WorkedTime> times = workedTimeGateway.getAllByUser(user);
+        ArrayList<WorkedTime> times = workedTimeGateway.getAllByUserOrderedByDate(user);
         ArrayList<WorkedTimeViewModel> timeViewModels = new ArrayList<>();
         for (WorkedTime time : times) {
             timeViewModels.add(getWorkedTimeViewModelFromTime(time));

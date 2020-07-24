@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 public interface WorkedTimeRepository extends JpaRepository<WorkedTime, Long> {
 
-    ArrayList<WorkedTime> findAllByCreatedBy(User user);
+    ArrayList<WorkedTime> findAllByCreatedByOrderByStartTimeDesc(User user);
 }

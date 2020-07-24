@@ -17,8 +17,8 @@ public class WorkedTimeGatewayImpl implements WorkedTimeGateway {
     }
 
     @Override
-    public ArrayList<WorkedTime> getAllByUser(User user) {
-        return repository.findAllByCreatedBy(user);
+    public ArrayList<WorkedTime> getAllByUserOrderedByDate(User user) {
+        return repository.findAllByCreatedByOrderByStartTimeDesc(user);
     }
 
     @Override

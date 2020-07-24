@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface WorkedTimeGateway {
 
-    ArrayList<WorkedTime> getAllByUser(User user);
+    ArrayList<WorkedTime> getAllByUserOrderedByDate(User user);
 
     void saveAll(ArrayList<WorkedTime> workedTimes);
 
