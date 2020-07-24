@@ -22,6 +22,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -72,8 +73,8 @@ class SaveUsersTimeUseCaseTest {
         viewModel.beschreibung = "Test";
         viewModel.projektViewModel = getProjektViewModel();
         viewModel.kundenViewModel = getKundenViewModel("Test Kunde");
-        viewModel.startTime = LocalDateTime.of(2020,1,2,3,4,5,6);
-        viewModel.endTime = LocalDateTime.of(2020, 1,2,4,4,5,6);
+        viewModel.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,2,3,4,5,6));
+        viewModel.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2020, 1,2,4,4,5,6));
         viewModel.breakInMinutes = 30;
         workedTimeViewModels.add(viewModel);
         Kunde expectedKunde = new Kunde().setKundenName("Test Kunde");
@@ -108,8 +109,8 @@ class SaveUsersTimeUseCaseTest {
         prepareGatewayMock(new ArrayList<>(), new ArrayList<>());
         ArrayList<WorkedTimeViewModel> workedTimeViewModels = new ArrayList<>();
         WorkedTimeViewModel viewModel = new WorkedTimeViewModel();
-        viewModel.startTime = null;
-        viewModel.endTime = null;
+        viewModel.startTimestamp = null;
+        viewModel.endTimestamp = null;
         workedTimeViewModels.add(viewModel);
 
         assertThrows(InvalidDataException.class, () -> saveUsersTime.save(workedTimeViewModels, validUsername));
@@ -133,8 +134,8 @@ class SaveUsersTimeUseCaseTest {
 
     private WorkedTimeViewModel getWorkedTimeViewModel() {
         WorkedTimeViewModel viewModel = new WorkedTimeViewModel();
-        viewModel.startTime = LocalDateTime.now();
-        viewModel.endTime = LocalDateTime.now();
+        viewModel.startTimestamp = Timestamp.valueOf(LocalDateTime.now());
+        viewModel.endTimestamp = Timestamp.valueOf(LocalDateTime.now());
         viewModel.beschreibung = "Test";
         return viewModel;
     }

@@ -15,6 +15,7 @@ import com.fhws.zeiterfassung.models.ProjektViewModel;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -66,8 +67,8 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
         WorkedTime workedTime = new WorkedTime()
                 .setBeschreibung(timeViewModel.beschreibung)
                 .setBreakInMinutes(timeViewModel.breakInMinutes)
-                .setStartTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.startTime))
-                .setEndTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.endTime))
+                .setStartTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.startTimestamp))
+                .setEndTime(getLocalDateTimeWithoutSecondsAndNanos(timeViewModel.endTimestamp))
                 .setKunde(getKundeFromViewModel(timeViewModel.kundenViewModel))
                 .setProjekt(getProjektFromViewModel(timeViewModel.projektViewModel));
         workedTime.setCreatedBy(loggedInUser);
@@ -132,9 +133,9 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
         throw new KundeNotFoundException();
     }
 
-    private LocalDateTime getLocalDateTimeWithoutSecondsAndNanos(LocalDateTime time) throws InvalidDataException {
-        if (time == null)
+    private LocalDateTime getLocalDateTimeWithoutSecondsAndNanos(Timestamp timestamp) throws InvalidDataException {
+        if (timestamp == null)
             throw new InvalidDataException();
-        return time.withSecond(0).withNano(0);
+        return timestamp.toLocalDateTime().withSecond(0).withNano(0);
     }
 }

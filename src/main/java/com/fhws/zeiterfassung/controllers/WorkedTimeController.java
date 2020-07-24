@@ -5,13 +5,18 @@ import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
+import com.fhws.zeiterfassung.models.WorkedTimeViewModelRequest;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 @RestController
 public class WorkedTimeController {
@@ -27,6 +32,13 @@ public class WorkedTimeController {
         this.loggedInUserUtil = loggedInUserUtil;
         this.getUsersWorkedTime = getUsersWorkedTime;
         this.saveUsersTime = saveUsersTime;
+    }
+
+    @RequestMapping(value = "/test-date", method = RequestMethod.POST)
+    public ResponseEntity<?> testDate(@RequestBody Timestamp timestamp) {
+        LocalDateTime dateTime = timestamp.toLocalDateTime();
+        Timestamp newTimestamp = Timestamp.valueOf(dateTime);
+        return new ResponseEntity<>(newTimestamp.getTime(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add-times", method = RequestMethod.POST)

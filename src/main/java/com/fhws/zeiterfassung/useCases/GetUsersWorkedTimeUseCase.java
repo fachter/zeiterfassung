@@ -11,6 +11,7 @@ import com.fhws.zeiterfassung.models.ProjektViewModel;
 import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @Service
@@ -40,8 +41,8 @@ public class GetUsersWorkedTimeUseCase implements GetUsersWorkedTime {
         timeViewModel.id = time.getId();
         timeViewModel.beschreibung = time.getBeschreibung();
         timeViewModel.breakInMinutes = time.getBreakInMinutes();
-        timeViewModel.startTime = time.getStartTime();
-        timeViewModel.endTime = time.getEndTime();
+        timeViewModel.startTimestamp = Timestamp.valueOf(time.getStartTime());
+        timeViewModel.endTimestamp = Timestamp.valueOf(time.getEndTime());
         timeViewModel.kundenViewModel = getKundenViewModel(time);
         timeViewModel.projektViewModel = getProjektViewModel(time);
         return timeViewModel;

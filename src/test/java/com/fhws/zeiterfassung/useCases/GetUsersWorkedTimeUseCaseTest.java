@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -79,8 +80,8 @@ class GetUsersWorkedTimeUseCaseTest {
         WorkedTimeViewModel expectedViewModel = new WorkedTimeViewModel();
         expectedViewModel.id = 1L;
         expectedViewModel.beschreibung = "Beschreibung";
-        expectedViewModel.startTime = LocalDateTime.of(2020,1,1,20,20);
-        expectedViewModel.endTime = LocalDateTime.of(2020,1,1,21,0);
+        expectedViewModel.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,20,20));
+        expectedViewModel.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,21,0));
         expectedViewModel.breakInMinutes = 30;
         KundenViewModel kundenViewModel = new KundenViewModel();
         kundenViewModel.id = 123L;
@@ -116,8 +117,8 @@ class GetUsersWorkedTimeUseCaseTest {
         WorkedTimeViewModel expectedViewModel = new WorkedTimeViewModel();
         expectedViewModel.id = 1L;
         expectedViewModel.beschreibung = "Beschreibung";
-        expectedViewModel.startTime = LocalDateTime.of(2020,1,1,20,20);
-        expectedViewModel.endTime = LocalDateTime.of(2020,1,1,21,0);
+        expectedViewModel.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,20,20));
+        expectedViewModel.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,21,0));
         expectedViewModel.projektViewModel = null;
         expectedViewModel.kundenViewModel = null;
         when(workedTimeGatewayMock.getAllByUser(validUser)).thenReturn(times);
@@ -144,8 +145,8 @@ class GetUsersWorkedTimeUseCaseTest {
         WorkedTimeViewModel expectedViewModel1 = new WorkedTimeViewModel();
         expectedViewModel1.id = 1L;
         expectedViewModel1.beschreibung = "Beschreibung 1";
-        expectedViewModel1.startTime = LocalDateTime.of(2018,1,2,20,20);
-        expectedViewModel1.endTime = LocalDateTime.of(2018,1,2,21,0);
+        expectedViewModel1.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2018,1,2,20,20));
+        expectedViewModel1.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2018,1,2,21,0));
         expectedViewModel1.projektViewModel = null;
         expectedViewModel1.kundenViewModel = null;
 
@@ -163,8 +164,8 @@ class GetUsersWorkedTimeUseCaseTest {
         WorkedTimeViewModel expectedViewModel2 = new WorkedTimeViewModel();
         expectedViewModel2.id = 1L;
         expectedViewModel2.beschreibung = "Beschreibung 2";
-        expectedViewModel2.startTime = LocalDateTime.of(2019,1,1,20,20);
-        expectedViewModel2.endTime = LocalDateTime.of(2019,1,1,21,0);
+        expectedViewModel2.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2019,1,1,20,20));
+        expectedViewModel2.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2019,1,1,21,0));
         ProjektViewModel projektViewModel = new ProjektViewModel();
         projektViewModel.id = 123L;
         projektViewModel.projektName = "Test Projekt";
@@ -185,8 +186,8 @@ class GetUsersWorkedTimeUseCaseTest {
         WorkedTimeViewModel expectedViewModel3 = new WorkedTimeViewModel();
         expectedViewModel3.id = 1L;
         expectedViewModel3.beschreibung = "Beschreibung 3";
-        expectedViewModel3.startTime = LocalDateTime.of(2020,1,1,20,20);
-        expectedViewModel3.endTime = LocalDateTime.of(2020,1,1,21,0);
+        expectedViewModel3.startTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,20,20));
+        expectedViewModel3.endTimestamp = Timestamp.valueOf(LocalDateTime.of(2020,1,1,21,0));
         expectedViewModel3.projektViewModel = null;
         KundenViewModel kundenViewModel = new KundenViewModel();
         kundenViewModel.id = 321L;
