@@ -1,19 +1,19 @@
 package com.fhws.zeiterfassung.useCases;
 
-import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
+import com.fhws.zeiterfassung.boundaries.useCases.SaveUsersTime;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.gateways.KundeGateway;
-import com.fhws.zeiterfassung.gateways.ProjektGateway;
-import com.fhws.zeiterfassung.gateways.UserGateway;
-import com.fhws.zeiterfassung.gateways.WorkedTimeGateway;
-import com.fhws.zeiterfassung.models.KundenViewModel;
-import com.fhws.zeiterfassung.models.ProjektViewModel;
-import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
+import com.fhws.zeiterfassung.boundaries.gateways.KundeGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.ProjektGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.WorkedTimeGateway;
+import com.fhws.zeiterfassung.viewModels.KundenViewModel;
+import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
+import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

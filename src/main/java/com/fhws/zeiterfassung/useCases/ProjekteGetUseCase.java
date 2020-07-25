@@ -1,12 +1,12 @@
 package com.fhws.zeiterfassung.useCases;
 
-import com.fhws.zeiterfassung.boundaries.ProjekteGet;
+import com.fhws.zeiterfassung.boundaries.useCases.ProjekteGet;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.gateways.ProjektGateway;
-import com.fhws.zeiterfassung.gateways.UserGateway;
-import com.fhws.zeiterfassung.models.ProjektViewModel;
+import com.fhws.zeiterfassung.boundaries.gateways.ProjektGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
+import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

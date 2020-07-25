@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.gateways;
 
+import com.fhws.zeiterfassung.boundaries.gateways.KundeGateway;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;

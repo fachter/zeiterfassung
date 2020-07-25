@@ -1,4 +1,4 @@
-package com.fhws.zeiterfassung.gateways;
+package com.fhws.zeiterfassung.boundaries.gateways;
 
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;

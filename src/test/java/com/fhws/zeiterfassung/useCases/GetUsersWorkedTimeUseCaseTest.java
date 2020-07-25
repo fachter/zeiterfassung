@@ -1,16 +1,16 @@
 package com.fhws.zeiterfassung.useCases;
 
-import com.fhws.zeiterfassung.boundaries.GetUsersWorkedTime;
+import com.fhws.zeiterfassung.boundaries.useCases.GetUsersWorkedTime;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.gateways.UserGateway;
-import com.fhws.zeiterfassung.gateways.WorkedTimeGateway;
-import com.fhws.zeiterfassung.models.KundenViewModel;
-import com.fhws.zeiterfassung.models.ProjektViewModel;
-import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.WorkedTimeGateway;
+import com.fhws.zeiterfassung.viewModels.KundenViewModel;
+import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
+import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

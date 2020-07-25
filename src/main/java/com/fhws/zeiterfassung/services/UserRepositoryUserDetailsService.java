@@ -1,10 +1,7 @@
 package com.fhws.zeiterfassung.services;
 
-import com.fhws.zeiterfassung.entities.User;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.gateways.UserGateway;
-import com.fhws.zeiterfassung.repositories.UserRepository;
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

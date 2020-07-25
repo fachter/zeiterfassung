@@ -1,4 +1,4 @@
-package com.fhws.zeiterfassung.models;
+package com.fhws.zeiterfassung.viewModels;
 
 import java.util.ArrayList;
 

@@ -1,24 +1,14 @@
 package com.fhws.zeiterfassung.controllers;
 
-import com.fhws.zeiterfassung.boundaries.Authenticate;
-import com.fhws.zeiterfassung.boundaries.CreateNewUser;
-import com.fhws.zeiterfassung.boundaries.GetAccountInformation;
+import com.fhws.zeiterfassung.boundaries.useCases.Authenticate;
+import com.fhws.zeiterfassung.boundaries.useCases.CreateNewUser;
 import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
-import com.fhws.zeiterfassung.models.AccountInformationViewModel;
-import com.fhws.zeiterfassung.models.AuthenticationRequest;
-import com.fhws.zeiterfassung.models.AuthenticationResponse;
-import com.fhws.zeiterfassung.models.RegisterRequest;
-import com.fhws.zeiterfassung.services.UserRepositoryUserDetailsService;
-import com.fhws.zeiterfassung.utils.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fhws.zeiterfassung.viewModels.AuthenticationRequest;
+import com.fhws.zeiterfassung.viewModels.RegisterRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin

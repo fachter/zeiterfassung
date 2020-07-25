@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.gateways;
 
+import com.fhws.zeiterfassung.boundaries.gateways.WorkedTimeGateway;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.entities.WorkedTime;
 import com.fhws.zeiterfassung.repositories.WorkedTimeRepository;

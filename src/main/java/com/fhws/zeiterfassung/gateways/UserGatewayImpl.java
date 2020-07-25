@@ -1,7 +1,7 @@
 package com.fhws.zeiterfassung.gateways;
 
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
 import com.fhws.zeiterfassung.entities.User;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
 import com.fhws.zeiterfassung.repositories.UserRepository;

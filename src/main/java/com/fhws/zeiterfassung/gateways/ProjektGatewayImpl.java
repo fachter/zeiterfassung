@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.gateways;
 
+import com.fhws.zeiterfassung.boundaries.gateways.ProjektGateway;
 import com.fhws.zeiterfassung.entities.Projekt;
 import com.fhws.zeiterfassung.entities.User;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;

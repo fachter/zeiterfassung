@@ -1,9 +1,8 @@
-package com.fhws.zeiterfassung.boundaries;
+package com.fhws.zeiterfassung.boundaries.useCases;
 
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.models.KundenViewModel;
+import com.fhws.zeiterfassung.viewModels.KundenViewModel;
 
 import java.util.ArrayList;
 

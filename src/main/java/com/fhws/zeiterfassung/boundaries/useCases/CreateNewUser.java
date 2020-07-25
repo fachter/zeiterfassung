@@ -1,9 +1,9 @@
-package com.fhws.zeiterfassung.boundaries;
+package com.fhws.zeiterfassung.boundaries.useCases;
 
 import com.fhws.zeiterfassung.exceptions.EmailAlreadyExistsException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserAlreadyExistsException;
-import com.fhws.zeiterfassung.models.RegisterRequest;
+import com.fhws.zeiterfassung.viewModels.RegisterRequest;
 
 public interface CreateNewUser {
 

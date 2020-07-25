@@ -1,7 +1,7 @@
-package com.fhws.zeiterfassung.boundaries;
+package com.fhws.zeiterfassung.boundaries.useCases;
 
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
+import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
 
 import java.util.ArrayList;
 

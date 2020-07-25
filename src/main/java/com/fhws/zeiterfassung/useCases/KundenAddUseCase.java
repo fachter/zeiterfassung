@@ -1,15 +1,14 @@
 package com.fhws.zeiterfassung.useCases;
 
-import com.fhws.zeiterfassung.boundaries.KundenAdd;
+import com.fhws.zeiterfassung.boundaries.useCases.KundenAdd;
 import com.fhws.zeiterfassung.entities.Kunde;
 import com.fhws.zeiterfassung.entities.User;
-import com.fhws.zeiterfassung.exceptions.EntityNotFoundException;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.KundeNotFoundException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.gateways.KundeGateway;
-import com.fhws.zeiterfassung.gateways.UserGateway;
-import com.fhws.zeiterfassung.models.KundenViewModel;
+import com.fhws.zeiterfassung.boundaries.gateways.KundeGateway;
+import com.fhws.zeiterfassung.boundaries.gateways.UserGateway;
+import com.fhws.zeiterfassung.viewModels.KundenViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

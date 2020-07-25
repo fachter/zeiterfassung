@@ -1,13 +1,13 @@
 package com.fhws.zeiterfassung.controllers;
 
-import com.fhws.zeiterfassung.boundaries.KundenAdd;
-import com.fhws.zeiterfassung.boundaries.KundenGet;
-import com.fhws.zeiterfassung.boundaries.ProjekteAdd;
-import com.fhws.zeiterfassung.boundaries.ProjekteGet;
+import com.fhws.zeiterfassung.boundaries.useCases.KundenAdd;
+import com.fhws.zeiterfassung.boundaries.useCases.KundenGet;
+import com.fhws.zeiterfassung.boundaries.useCases.ProjekteAdd;
+import com.fhws.zeiterfassung.boundaries.useCases.ProjekteGet;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.models.KundenViewModel;
-import com.fhws.zeiterfassung.models.ProjektViewModel;
+import com.fhws.zeiterfassung.viewModels.KundenViewModel;
+import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

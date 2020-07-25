@@ -1,7 +1,6 @@
-package com.fhws.zeiterfassung.models;
+package com.fhws.zeiterfassung.viewModels;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class WorkedTimeViewModel {
 

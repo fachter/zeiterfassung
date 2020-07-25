@@ -1,10 +1,10 @@
 package com.fhws.zeiterfassung.controllers;
 
-import com.fhws.zeiterfassung.boundaries.GetUsersWorkedTime;
-import com.fhws.zeiterfassung.boundaries.SaveUsersTime;
+import com.fhws.zeiterfassung.boundaries.useCases.GetUsersWorkedTime;
+import com.fhws.zeiterfassung.boundaries.useCases.SaveUsersTime;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
 import com.fhws.zeiterfassung.exceptions.UserDoesNotExistException;
-import com.fhws.zeiterfassung.models.WorkedTimeViewModel;
+import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
 import com.fhws.zeiterfassung.utils.LoggedInUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
