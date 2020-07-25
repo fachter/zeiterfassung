@@ -13,6 +13,7 @@ import com.fhws.zeiterfassung.boundaries.gateways.WorkedTimeGateway;
 import com.fhws.zeiterfassung.viewModels.KundenViewModel;
 import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
 import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -34,6 +35,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
     private ArrayList<WorkedTime> workedTimesToPersist;
     private User loggedInUser;
 
+    @Autowired
     public SaveUsersTimeUseCase(UserGateway userGateway,
                                 WorkedTimeGateway workedTimeGateway,
                                 KundeGateway kundeGateway,

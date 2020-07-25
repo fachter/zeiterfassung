@@ -9,6 +9,7 @@ import com.fhws.zeiterfassung.boundaries.gateways.WorkedTimeGateway;
 import com.fhws.zeiterfassung.viewModels.KundenViewModel;
 import com.fhws.zeiterfassung.viewModels.ProjektViewModel;
 import com.fhws.zeiterfassung.viewModels.WorkedTimeViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -20,6 +21,7 @@ public class GetUsersWorkedTimeUseCase implements GetUsersWorkedTime {
     private final UserGateway userGateway;
     private final WorkedTimeGateway workedTimeGateway;
 
+    @Autowired
     public GetUsersWorkedTimeUseCase(UserGateway userGateway, WorkedTimeGateway workedTimeGateway) {
         this.userGateway = userGateway;
         this.workedTimeGateway = workedTimeGateway;
