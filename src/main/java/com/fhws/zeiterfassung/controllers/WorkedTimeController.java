@@ -31,11 +31,15 @@ public class WorkedTimeController {
         this.saveUsersTime = saveUsersTime;
     }
 
-    @RequestMapping(value = "/test-date", method = RequestMethod.POST)
-    public ResponseEntity<?> testDate(@RequestBody Timestamp timestamp) {
-        LocalDateTime dateTime = timestamp.toLocalDateTime();
-        Timestamp newTimestamp = Timestamp.valueOf(dateTime);
-        return new ResponseEntity<>(newTimestamp.getTime(), HttpStatus.OK);
+    @RequestMapping(value = "/times", method = RequestMethod.POST)
+    public ResponseEntity<?> getTimes(@RequestHeader String authorization) {
+        try {
+            return new ResponseEntity<>(
+                    getUsersWorkedTime.get(loggedInUserUtil.getUsernameFromAuthorizationToken(authorization)),
+                    HttpStatus.OK);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+        }
     }
 
     @RequestMapping(value = "/add-times", method = RequestMethod.POST)
@@ -50,14 +54,10 @@ public class WorkedTimeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/times", method = RequestMethod.POST)
-    public ResponseEntity<?> getTimes(@RequestHeader String authorization) {
-        try {
-            return new ResponseEntity<>(
-                    getUsersWorkedTime.get(loggedInUserUtil.getUsernameFromAuthorizationToken(authorization)),
-                    HttpStatus.OK);
-        } catch (UserDoesNotExistException e) {
-            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
-        }
+    @RequestMapping(value = "/test-date", method = RequestMethod.POST)
+    public ResponseEntity<?> testDate(@RequestBody Timestamp timestamp) {
+        LocalDateTime dateTime = timestamp.toLocalDateTime();
+        Timestamp newTimestamp = Timestamp.valueOf(dateTime);
+        return new ResponseEntity<>(newTimestamp.getTime(), HttpStatus.OK);
     }
 }
