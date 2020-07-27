@@ -27,6 +27,11 @@ public class WorkedTimeGatewayImpl implements WorkedTimeGateway {
         repository.saveAll(workedTimes);
     }
 
+    @Override
+    public void remove(ArrayList<WorkedTime> workedTimes) {
+        repository.deleteAll(workedTimes);
+    }
+
     public void flush() {
         repository.flush();
     }

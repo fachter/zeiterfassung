@@ -14,11 +14,11 @@ public class WorkedTime extends BaseEntity {
     private String beschreibung;
     private int breakInMinutes;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "kunde_id")
     private Kunde kunde;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "projekt_id")
     private Projekt projekt;
 

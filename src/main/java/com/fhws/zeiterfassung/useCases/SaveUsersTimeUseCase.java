@@ -100,7 +100,7 @@ public class SaveUsersTimeUseCase implements SaveUsersTime {
 
     private Projekt getProjektFromDb(ProjektViewModel viewModel) throws ProjektNotFoundException {
         for (Projekt projekt : projekteFromDb) {
-            if (Objects.equals(projekt.getId(), viewModel.id) || Objects.equals(projekt.getProjektName(), viewModel.projektName))
+            if (projekt.getId().equals(viewModel.id) || projekt.getProjektName().equals(viewModel.projektName))
                 return projekt;
         }
         throw new ProjektNotFoundException();

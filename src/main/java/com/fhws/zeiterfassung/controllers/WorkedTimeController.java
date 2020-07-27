@@ -1,5 +1,6 @@
 package com.fhws.zeiterfassung.controllers;
 
+import com.fhws.zeiterfassung.boundaries.useCases.DeleteUsersWorkedTime;
 import com.fhws.zeiterfassung.boundaries.useCases.GetUsersWorkedTime;
 import com.fhws.zeiterfassung.boundaries.useCases.SaveUsersTime;
 import com.fhws.zeiterfassung.exceptions.InvalidDataException;
@@ -21,14 +22,18 @@ public class WorkedTimeController {
     private final LoggedInUserUtil loggedInUserUtil;
     private final GetUsersWorkedTime getUsersWorkedTime;
     private final SaveUsersTime saveUsersTime;
+    private final DeleteUsersWorkedTime deleteUsersTime;
+    private final String userDoesNotExistMessage = "User does not exist";
 
     @Autowired
     public WorkedTimeController(LoggedInUserUtil loggedInUserUtil,
                                 GetUsersWorkedTime getUsersWorkedTime,
-                                SaveUsersTime saveUsersTime) {
+                                SaveUsersTime saveUsersTime,
+                                DeleteUsersWorkedTime deleteUsersTime) {
         this.loggedInUserUtil = loggedInUserUtil;
         this.getUsersWorkedTime = getUsersWorkedTime;
         this.saveUsersTime = saveUsersTime;
+        this.deleteUsersTime = deleteUsersTime;
     }
 
     @RequestMapping(value = "/times", method = RequestMethod.POST)
@@ -38,7 +43,7 @@ public class WorkedTimeController {
                     getUsersWorkedTime.get(loggedInUserUtil.getUsernameFromAuthorizationToken(authorization)),
                     HttpStatus.OK);
         } catch (UserDoesNotExistException e) {
-            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(userDoesNotExistMessage, HttpStatus.FORBIDDEN);
         }
     }
 
@@ -47,9 +52,19 @@ public class WorkedTimeController {
         try {
             saveUsersTime.save(workedTimeViewModels, loggedInUserUtil.getUsernameFromAuthorizationToken(authorization));
         } catch (UserDoesNotExistException e) {
-            return new ResponseEntity<>("User does not exist", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(userDoesNotExistMessage, HttpStatus.FORBIDDEN);
         } catch (InvalidDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete-times", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteTimes(@RequestBody ArrayList<Long> ids, @RequestHeader String authorization) {
+        try {
+            deleteUsersTime.delete(ids, loggedInUserUtil.getUsernameFromAuthorizationToken(authorization));
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(userDoesNotExistMessage, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

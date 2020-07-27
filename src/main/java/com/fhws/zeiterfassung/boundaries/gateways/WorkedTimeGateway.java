@@ -11,5 +11,7 @@ public interface WorkedTimeGateway {
 
     void saveAll(ArrayList<WorkedTime> workedTimes);
 
+    void remove(ArrayList<WorkedTime> workedTimes);
+
     void flush();
 }
